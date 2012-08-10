@@ -1,0 +1,126 @@
+' Gambas class file
+
+Private actualTag As String
+Private hsInicio As String
+Private hsFin As String
+' [GB2:ARRD] PRIVATE actualDuracion AS String[2]
+Private actualDuracion As New String[2]
+
+Private siguienteAire As String
+Private siguienteDuracion As String
+Private siguienteInformacion As String
+
+Private gui As ClsVisorReproduccionGui
+
+Public Sub _new(contenedor As Frame)
+
+  gui = New ClsVisorReproduccionGui(contenedor)
+  actualDuracion = New String[2]
+
+End
+
+Public Function genAhora(aire As Label, duracion As Label, inicio As Label, fin As Label)
+
+  gui.genAhora(aire, duracion, inicio, fin)
+  gui.graficar()
+
+End
+
+Public Function genSiguiente(siguiente As Label, duracion As Label, informacion As Label)
+
+  gui.genSiguiente(siguiente, duracion, informacion)
+
+End
+
+Public Function redibujar()
+
+  gui.graficar()
+
+End
+
+Public Function graficarSiguente()
+
+  gui.graficarSiguente()
+
+End
+
+Public Function actualizar()
+
+  gui.setAhoraAire("En AIRE: " & actualTag)
+  gui.setAhoraDuracion("Posicion: " & actualDuracion[0] & "-" & actualDuracion[1])
+  gui.setAhoraFin("Finaliza: " & hsFin)
+  gui.setAhoraInicio("Inició: " & hsInicio)
+
+  gui.setSiguienteAire("Siguiente: " & siguienteAire)
+  gui.setSiguienteDuracion("Duracion: " & siguienteDuracion)
+  gui.setSiguienteInformacion("Url: " & siguienteInformacion)
+
+  gui.graficar()
+
+End
+
+Public Function setPosicion(posicion As String, duracion As String)
+
+  actualDuracion[0] = posicion
+  actualDuracion[1] = duracion
+
+End
+
+Public Function cargar(tag As String, inicio As String, finaliza As String)
+
+  actualTag = tag
+  hsInicio = inicio
+  hsFin = finaliza
+
+  actualizar()
+
+End
+
+Public Function cargarSiguiente(tag As String, duracion As String, url As String)
+
+  siguienteAire = tag
+  siguienteDuracion = duracion
+  siguienteInformacion = url
+
+End
+
+' Visor Central
+
+Public Function generarInformacionCentral(contenedorExt As Frame, lblDuracionListaText As Label, lblDuracionLista As Label, lblDuracionSeleccionText As Label, lblDuracionSeleccion As Label)
+
+  gui.generarInformacionCentral(contenedorExt, lblDuracionListaText, lblDuracionLista, lblDuracionSeleccionText, lblDuracionSeleccion)
+
+End
+
+Public Function redibujarInformacionCentral()
+
+  gui.redibujarInformacionCentral()
+
+End
+
+Public Function setCentralDuracionLista(duracion As String)
+
+  gui.setCentralDuracionLista(duracion)
+
+End
+
+Public Function setCentralDuracionSeleccion(duracion As String)
+
+  gui.setCentralDuracionSeleccion(duracion)
+
+End
+
+Public Function setClearCentralDuracionSeleccion()
+
+  setCentralDuracionSeleccion("--:--:--")
+
+End
+
+Public Function resetVisores()
+
+  cargar("--", "--:--", "--:--")
+  cargarSiguiente("--", "--:--", "--")
+
+  actualizar()
+
+End

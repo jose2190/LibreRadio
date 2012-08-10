@@ -1,0 +1,465 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-11-01 04:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .project:1 FMain.form:118
+msgid "Libertics LibreRadio"
+msgstr ""
+
+#: .project:2
+msgid "Sistema de autocontrol para radios."
+msgstr ""
+
+#: FMain.form:82
+msgid "&LibreRadio"
+msgstr ""
+
+#: FMain.form:85
+msgid "Preferencias de configuración ..."
+msgstr ""
+
+#: FMain.form:92
+msgid "&Ayuda"
+msgstr ""
+
+#: FMain.form:95
+msgid "Acerca de LibreRadio"
+msgstr ""
+
+#: FMain.form:100
+msgid "Acerca de Libertics"
+msgstr "Acerca de Libertics"
+
+#: FMain.form:128
+msgid "Controles"
+msgstr ""
+
+#: FMain.form:136
+msgid "Actualmente en reproducción"
+msgstr ""
+
+#: FMain.form:137
+msgid "En AIRE:"
+msgstr ""
+
+#: FMain.form:143
+msgid "Posición y duración del audio actual"
+msgstr ""
+
+#: FMain.form:144
+msgid "Posicion:"
+msgstr ""
+
+#: FMain.form:151
+msgid "Hora de inicio del audio actual"
+msgstr ""
+
+#: FMain.form:152
+msgid "Inicio:"
+msgstr ""
+
+#: FMain.form:159
+msgid "Hora en la que finaliza el audio actual"
+msgstr ""
+
+#: FMain.form:160
+msgid "Finaliza:"
+msgstr ""
+
+#: FMain.form:170
+msgid "Siguiente:"
+msgstr ""
+
+#: FMain.form:176
+msgid "Duracion:"
+msgstr ""
+
+#: FMain.form:182 frmConfig.form:134
+msgid "Url:"
+msgstr ""
+
+#: FMain.form:189
+msgid "Hora"
+msgstr ""
+
+#: FMain.form:193
+msgid "Reproduce una locución con la hora actual"
+msgstr ""
+
+#: FMain.form:194
+msgid "&Horaria"
+msgstr ""
+
+#: FMain.form:204
+msgid "Hora actual del sistema"
+msgstr ""
+
+#: FMain.form:205
+msgid "00:00:00"
+msgstr ""
+
+#: FMain.form:219
+msgid "Archivos"
+msgstr ""
+
+#: FMain.form:226
+msgid "Elementos para la lista de reproducción"
+msgstr ""
+
+#: FMain.form:231
+msgid "Nav. Archivos"
+msgstr ""
+
+#: FMain.form:238
+msgid "Vista de las carpetas en su equipo y red local"
+msgstr ""
+
+#: FMain.form:245
+msgid "Lista de los archivos soportados, dentro de la carpeta actual"
+msgstr ""
+
+#: FMain.form:251
+msgid "R.Onlines / Locuciones"
+msgstr ""
+
+#: FMain.form:255 frmConfig.form:107
+msgid "Radios Online"
+msgstr ""
+
+#: FMain.form:259
+msgid "Lista de las radios online"
+msgstr ""
+
+#: FMain.form:266
+msgid "Radios Onlines:"
+msgstr ""
+
+#: FMain.form:271
+msgid "Duración:"
+msgstr ""
+
+#: FMain.form:279
+msgid "Minutos que durará la reproducción de la radio online en aire"
+msgstr ""
+
+#: FMain.form:285
+msgid "Segundos que durará la reproducción de la radio en aire"
+msgstr ""
+
+#: FMain.form:291
+msgid "Seg:"
+msgstr ""
+
+#: FMain.form:296
+msgid "Min:"
+msgstr ""
+
+#: FMain.form:303
+msgid "Locuciones"
+msgstr ""
+
+#: FMain.form:307
+msgid "Agrega un evento \"locucion horaria\" a la lista de reproducción"
+msgstr ""
+
+#: FMain.form:308
+msgid "Locución Horaria"
+msgstr ""
+
+#: FMain.form:312
+msgid "Audioteca"
+msgstr ""
+
+#: FMain.form:324 frmConfig.form:156
+msgid "Efectos"
+msgstr ""
+
+#: FMain.form:328
+msgid "&1"
+msgstr ""
+
+#: FMain.form:333
+msgid "&2"
+msgstr ""
+
+#: FMain.form:338
+msgid "&3"
+msgstr ""
+
+#: FMain.form:343
+msgid "&4"
+msgstr ""
+
+#: FMain.form:348
+msgid "&5"
+msgstr ""
+
+#: FMain.form:353
+msgid "&6"
+msgstr ""
+
+#: FMain.form:358
+msgid "&7"
+msgstr ""
+
+#: FMain.form:363
+msgid "&8"
+msgstr ""
+
+#: FMain.form:370
+msgid "Agregar / Quitar"
+msgstr ""
+
+#: FMain.form:374
+msgid "Agrega elementos a la lista de reproducción"
+msgstr ""
+
+#: FMain.form:375 frmConfig.form:112
+msgid "Agregar"
+msgstr ""
+
+#: FMain.form:380
+msgid "Elimina los archivos seleccionados en la lista de reproducción"
+msgstr ""
+
+#: FMain.form:381 frmConfig.form:124
+msgid "Eliminar"
+msgstr ""
+
+#: FMain.form:387
+msgid "Información de la lista de reproducción"
+msgstr ""
+
+#: FMain.form:389
+msgid "Información"
+msgstr ""
+
+#: FMain.form:394
+msgid "Duracion de Lista:"
+msgstr ""
+
+#: FMain.form:400
+msgid "--:--:--"
+msgstr ""
+
+#: FMain.form:406
+msgid "Duracion de Selección:"
+msgstr ""
+
+#: FMain.form:420
+msgid "Lista de Reproducción"
+msgstr ""
+
+#: FMain.form:428
+msgid "Lista Principal"
+msgstr ""
+
+#: FMain.form:432
+msgid "Lista principal de reproducción"
+msgstr ""
+
+#: FMain.form:442
+msgid "Volumen del reproductor principal"
+msgstr ""
+
+#: FMain.form:451
+msgid "Alterna un elemento de la lista hacia arriba"
+msgstr ""
+
+#: FMain.form:457
+msgid "Alterna un elemento de la lista hacia abajo"
+msgstr ""
+
+#: FMain.form:463
+msgid "Silencia el audio actual"
+msgstr ""
+
+#: FMain.form:464
+msgid "&Silencio"
+msgstr ""
+
+#: FMain.form:470
+msgid "V"
+msgstr ""
+
+#: FMain.form:477
+msgid "S"
+msgstr ""
+
+#: FMain.form:481
+msgid "Opciones"
+msgstr ""
+
+#: FMain.form:485
+msgid "Lista Infinita"
+msgstr ""
+
+#: FMain.form:495
+msgid "Activa / desactiva el pisador del reproductor principal"
+msgstr ""
+
+#: FMain.form:497
+msgid "Activar Pisa&dor"
+msgstr ""
+
+#: FMain.form:502
+msgid "Inicia la reproducción de la lista"
+msgstr ""
+
+#: FMain.form:504
+msgid "Re&producir"
+msgstr ""
+
+#: frmAcercaLibertics.form:20
+msgid ""
+"LiberTICs nace allá por finales del año 2010, del área TLIC (Tecnologías Libres de Información y Comunicaciones) de una Cooperativa de Trabajo donde funciona desde 2006 la “Primer Radio FM migrada 100% a GNU/Linux de la Provincia de Misiones“\n"
+"\n"
+"La divulgación en el uso, aprovechamiento y apropiación de esta forma de ver y vivir la tecnología es la piedra angular sobre la cual concebimos la idea de LiberTICs.\n"
+"\n"
+"Esta visión va más allá de las enormes bondades técnicas del Software Libre, apuntamos al trabajo y formación de conocimiento y cultura en comunidad de forma colaborativa y cooperativa en igualdad de oportunidades, donde el único límite son las ganas de aprender y compartir.\n"
+"\n"
+"Los profesionales que conformamos LiberTICs tenemos más de 10 años en el campo de la Informática Libre, asistiendo en la migración de varias empresas y profesionales de la región. Muchos de nosotros somos parte activa de MiSoL, que es el grupo de usuarios de Software Libre de la Provincia de Misiones, y algunos miembros son fundadores del mismo, lo que marca nuestro compromiso.\n"
+"\n"
+"LiberTICs es un ámbito donde el compartir conocimiento no está vetado, el grupo esta formado por Ingenieros en Sistemas, Docentes Técnicos, Técnicos Informáticos, Periodistas, Estudiantes, y Autodidactas Curiosos ávidos por aprender, entender y lo más importante compartir.\n"
+"… El Conocimiento Compartido no se Pierde… Se Multiplica!!!…"
+msgstr ""
+
+#: frmAcercaLibertics.form:27
+msgid "Cerrar"
+msgstr ""
+
+#: frmAcercaLibreradio.form:33
+msgid "OK"
+msgstr ""
+
+#: frmConfig.form:45
+msgid "Rutas"
+msgstr ""
+
+#: frmConfig.form:50
+msgid "Path del Nucleo:"
+msgstr ""
+
+#: frmConfig.form:56
+msgid "Path de Locuciones:"
+msgstr ""
+
+#: frmConfig.form:62
+msgid "Path Lector Tags:"
+msgstr ""
+
+#: frmConfig.form:68
+msgid "Path Radios Onlines"
+msgstr ""
+
+#: frmConfig.form:74
+msgid "Path donde se encuentrasn las configuraciones de los efectos"
+msgstr ""
+
+#: frmConfig.form:75
+msgid "Path Efectos"
+msgstr ""
+
+#: frmConfig.form:80
+msgid "Path de las locuciones horarias"
+msgstr ""
+
+#: frmConfig.form:85
+msgid "Path del lector de tags"
+msgstr ""
+
+#: frmConfig.form:90
+msgid "Path del nucleo de LibreRadio"
+msgstr ""
+
+#: frmConfig.form:99
+msgid "Path donde se encuentran las listas de Radios Onlines"
+msgstr ""
+
+#: frmConfig.form:111
+msgid "Agragar / Editar radio online"
+msgstr ""
+
+#: frmConfig.form:117
+msgid "Editar una radio online de la lista"
+msgstr ""
+
+#: frmConfig.form:118
+msgid "Editar"
+msgstr ""
+
+#: frmConfig.form:123
+msgid "Eliminar una radio online de la lista"
+msgstr ""
+
+#: frmConfig.form:129
+msgid "Nombre:"
+msgstr ""
+
+#: frmConfig.form:139
+msgid "Nombre de la radio online"
+msgstr ""
+
+#: frmConfig.form:144
+msgid "Url donde transmite la radio online"
+msgstr ""
+
+#: frmConfig.form:173
+msgid "Editar un efecto de la lista"
+msgstr ""
+
+#: frmConfig.form:179
+msgid "Eliminar un efecto de la lista"
+msgstr ""
+
+#: frmConfig.form:185
+msgid "Agregar / Editar un efecto de la lista"
+msgstr ""
+
+#: frmConfig.form:191
+msgid "Seleccione un archivo en su disco, red local o internet"
+msgstr ""
+
+#: frmConfig.form:202
+msgid ""
+"Nota: El orden de la lista, se corresponde con el \n"
+"número del botón efecto. \n"
+"Ej: Posición 1 -> Botón 1"
+msgstr ""
+
+#: frmConfig.form:209
+msgid "Guardar los cambios y reflejar en el sistema"
+msgstr ""
+
+#: frmConfig.form:210
+msgid "Guardar"
+msgstr ""
+
+#: frmConfig.form:215
+msgid "Cancelar todos los cambios realizados"
+msgstr ""
+
+#: frmConfig.form:216
+msgid "Cancelar"
+msgstr ""
+
+#: test.form:29
+msgid "Enviar Comando"
+msgstr ""
+
+#: test.form:54
+msgid "Horaria"
+msgstr ""
+
+#: test.form:67
+msgid "Reproducir"
+msgstr ""

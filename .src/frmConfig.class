@@ -1,0 +1,241 @@
+' Gambas class file
+
+Private config As ClsConfiguracion
+Private radiosOnline As ClsRadiosOnline
+
+Public radiosNombre As String[]
+Public radioUrl As String[]
+Public efectos As ClsEfectos
+Public editarRadiosOnline As Boolean
+Public editarEfectos As Boolean
+Public efectosLista As String[]
+
+Public Function abrirModal(configuracion As ClsConfiguracion, radioOnlineExt As ClsRadiosOnline, eff As ClsEfectos)
+
+  efectos = eff
+  radiosOnline = radioOnlineExt
+  config = configuracion
+  graficar()
+  efectosLista = efectos.getContent()
+  editarEfectos = False
+  editarRadiosOnline = False
+
+  Me.ShowModal()
+
+End
+
+Public Function graficar()
+
+  tbxPathNucleo.Text = config.getPathNucleo()
+  tbxPathRadiosOnlines.Text = config.getPathRadiosOnline()
+  tbxPathTags.Text = config.getPathLectorTag()
+  tbxPathLocuciones.Text = config.getPathHorarias()
+  tbxPathEfectos.Text = config.getPathEfectos()
+  tbxPathDvArchivos.Text = config.getPathDvArchivos()
+
+End
+
+Public Sub Form_Open()
+
+  Dim data As Object[]
+
+  editarRadiosOnline = False
+
+  data = radiosOnline.getContent()
+  radiosNombre = data[0]
+  radioUrl = data[1]
+
+  clvRadiosOnline.Columns.Count = 2
+  clvRadiosOnline.Columns[0].Text = "Nombre"
+  clvRadiosOnline.Columns[1].Text = "Url"
+
+  clvEfectos.Columns[0].Text = "Efecto"
+
+  clvEfectos.Columns.Count = 1
+
+  cargarEfectos()
+  cargarListaRadiosOnline()
+
+  Me.Title = "Preferencias LibreRadio"
+
+End
+
+Public Function cargarEfectos()
+
+  Dim i As Integer
+
+  clvEfectos.Clear
+
+  For i = 0 To efectosLista.Count - 1
+    clvEfectos.Add(Str(i), "0")
+    clvEfectos[Str(i)][0] = efectosLista[i]
+  Next
+
+End
+
+Public Function cargarListaRadiosOnline()
+
+  Dim i As Integer
+
+  clvRadiosOnline.Clear()
+  For i = 0 To radiosNombre.Count - 1
+    clvRadiosOnline.Add(Str(i), "0")
+    clvRadiosOnline[Str(i)][0] = radiosNombre[i]
+    clvRadiosOnline[Str(i)][1] = radioUrl[i]
+  Next
+
+End
+
+Public Sub btnGuardar_Click()
+
+  config.generar(tbxPathNucleo.Text, tbxPathLocuciones.Text, tbxPathRadiosOnlines.Text, tbxPathTags.Text, tbxPathEfectos.Text, tbxPathDvArchivos.Text)
+  config.guardar()
+
+  radiosOnline.setContent(radiosNombre, radioUrl)
+  radiosOnline.persistir()
+
+  efectos.setContent(efectosLista)
+  efectos.persistir()
+  FMain.recargarConfiguracion()
+  Me.Close()
+
+End
+
+Public Sub btnConfigEditar_Click()
+
+  If clvRadiosOnline.Current <> Null
+    editarRadiosOnline = True
+    btnConfigAgregar.Text = "Guardar"
+    btnConfigEliminar.Enabled = False
+    btnConfigEditar.Enabled = False
+    clvRadiosOnline.Enabled = False
+    tbConfigRadioNombre.Text = clvRadiosOnline.Current[0]
+    tbConfigRadioUrl.Text = clvRadiosOnline.Current[1]
+  Else
+    Message.Warning("Debe seleccionar almenos una radio online", "Aceptar")
+  Endif
+
+End
+
+Public Sub btnConfigAgregar_Click()
+
+  Dim i As Integer
+  Dim nuevo As Integer
+
+  If editarRadiosOnline
+    btnConfigAgregar.Text = "Agregar"
+    btnConfigEliminar.Enabled = True
+    btnConfigEditar.Enabled = True
+
+    radiosNombre[CInt(clvRadiosOnline.Current.Key)] = tbConfigRadioNombre.Text
+    radioUrl[CInt(clvRadiosOnline.Current.Key)] = tbConfigRadioUrl.Text
+
+    editarRadiosOnline = False
+    clvRadiosOnline.Enabled = True
+
+  Else
+    nuevo = clvRadiosOnline.Count
+    radiosNombre.Add(tbConfigRadioNombre.Text)
+    radioUrl.Add(tbConfigRadioUrl.Text)
+    editarRadiosOnline = True
+  Endif
+
+  tbConfigRadioNombre.Clear()
+  tbConfigRadioUrl.Clear()
+
+  cargarListaRadiosOnline()
+
+End
+
+Public Sub btnConfigEliminar_Click()
+
+  Dim respuesta As Integer
+
+  respuesta = Message.Delete("¿Esta seguro que desea eliminar esta radio online?", "Eliminar", "Cancelar")
+
+  If respuesta == 1
+    radiosNombre.Remove(CInt(clvRadiosOnline.Current.Key))
+    radioUrl.Remove(CInt(clvRadiosOnline.Current.Key))
+    cargarListaRadiosOnline()
+  Endif
+
+End
+
+Public Sub btnCancelar_Click()
+
+  Me.Close()
+
+End
+
+Public Sub btnConfigEditarEfectos_Click()
+
+  If clvEfectos.Current <> Null
+    editarEfectos = True
+    btnConfigEfectosAgregar.Text = "Guardar"
+    btnConfigEliminarEfectos.Enabled = False
+    btnConfigEditarEfectos.Enabled = False
+    clvEfectos.Enabled = False
+    tbConfigEfectos.Text = clvEfectos.Current[0]
+  Else
+    Message.Warning("Debe seleccionar almenos un efecto", "Aceptar")
+  Endif
+
+End
+
+Public Sub btnConfigEliminarEfectos_Click()
+
+  Dim respuesta As Integer
+
+  If clvEfectos.Current <> Null
+    respuesta = Message.Delete("¿Esta seguro que desea eliminar este efecto?", "Eliminar", "Cancelar")
+
+    If respuesta == 1
+      efectosLista.Remove(CInt(clvEfectos.Current.Key))
+      cargarEfectos()
+    Endif
+  Else
+    Message.Warning("Debe seleccionar almenos un efecto", "Aceptar")
+  Endif
+
+End
+
+Public Sub btnConfigEfectosAgregar_Click()
+
+  Dim i As Integer
+
+  If editarEfectos
+    btnConfigEfectosAgregar.Text = "Agregar"
+    btnConfigEliminarEfectos.Enabled = True
+    btnConfigEditarEfectos.Enabled = True
+
+    efectosLista[CInt(clvEfectos.Current.Key)] = tbConfigEfectos.Text
+
+    editarEfectos = False
+    clvEfectos.Enabled = True
+
+  Else
+
+    efectosLista.Add(tbConfigEfectos.Text)
+    editarEfectos = False
+  Endif
+
+  tbConfigEfectos.Clear()
+
+  cargarEfectos()
+
+End
+
+Public Sub btnSeleccionarArchivo_Click()
+
+  Dim soporte As String[]
+
+  soporte = New String[]
+  soporte.Add("*.ogg; *.mp3; *.flv; *.ogg")
+  soporte.Add("Archivos Soportados")
+  Dialog.Title = "Seleccione un archivo para el pisador"
+  Dialog.Filter = soporte
+  If Not Dialog.OpenFile(False)
+    tbConfigEfectos.Text = Dialog.Path
+  Endif
+
+End

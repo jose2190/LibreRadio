@@ -1,0 +1,74 @@
+' Gambas class file
+
+Private listaArchivos As ListBox
+Private dVarchivos As DirChooser
+
+Public Sub _new(listaArchivosExt As ListBox, dvArchivosEx As DirChooser)
+
+  listaArchivos = listaArchivosExt
+  dVarchivos = dvArchivosEx
+
+End
+
+Public Function actualizarLista(archivos As String[])
+
+  Dim i As Integer
+
+  For i = 0 To archivos.Count - 1
+    listaArchivos.Add(archivos[i])
+  Next
+
+End
+
+Public Function limpiarLista()
+
+  listaArchivos.Clear()
+
+End
+
+Public Function getPermisos() As Boolean
+
+  Dim data As String[]
+  Dim retorno As Boolean
+
+  retorno = False
+
+  Try data = Dir(dVarchivos.SelectedPath)
+
+  If Error
+    retorno = True
+  Endif
+
+  Return (retorno)
+
+End
+
+Public Function getPathDir() As String
+
+  Return (dVarchivos.SelectedPath)
+
+End
+
+Public Function getArchivosLista() As String[]
+
+  Dim archivos As String[]
+  Dim i As Integer
+  Dim path As String
+
+  path = getPathDir()
+  archivos = New String[]
+
+  For i = 0 To listaArchivos.Count - 1
+    If listaArchivos[i].Selected
+      archivos.Add((path & "/" & listaArchivos[i].Text))
+    Endif
+  Next
+
+  Return (archivos)
+
+End
+
+Public Function setDirDefecto(path As String)
+  dVarchivos.Root = path
+End
+

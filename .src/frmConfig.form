@@ -1,0 +1,161 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,123,48)
+  Resizable = False
+  { tbsConfiguracion TabStrip
+    MoveScaled(1,1,119,38)
+    Count = 3
+    Index = 0
+    Text = ("Rutas")
+    { lblPathNucleo Label
+      MoveScaled(2,4,16,3)
+      Font = Font["+1"]
+      Text = ("Path del Nucleo:")
+    }
+    { lblPathNucleo2 Label
+      MoveScaled(2,8.1429,19,3)
+      Font = Font["+1"]
+      Text = ("Path de Locuciones:")
+    }
+    { lblPathNucleo3 Label
+      MoveScaled(2,12.7143,17,3)
+      Font = Font["+1"]
+      Text = ("Path Lector Tags:")
+    }
+    { lblPathNucleo4 Label
+      MoveScaled(2,15.7143,20,3)
+      Font = Font["+1"]
+      Text = ("Path Radios Onlines")
+    }
+    { lblPathEfectos Label
+      MoveScaled(2,19.7143,20,3)
+      Font = Font["+1"]
+      ToolTip = ("Path donde se encuentrasn las configuraciones de los efectos")
+      Text = ("Path Efectos")
+    }
+    { tbxPathLocuciones TextBox
+      MoveScaled(27,7.7143,65,4)
+      ToolTip = ("Path de las locuciones horarias")
+    }
+    { tbxPathTags TextBox
+      MoveScaled(27,11.7143,65,4)
+      ToolTip = ("Path del lector de tags")
+    }
+    { tbxPathNucleo TextBox
+      MoveScaled(27,3.7143,65,4)
+      ToolTip = ("Path del nucleo de LibreRadio")
+    }
+    { tbxPathEfectos TextBox
+      MoveScaled(27,19.7143,65,4)
+    }
+    { tbxPathRadiosOnlines TextBox
+      MoveScaled(27,15.7143,65,4)
+      ToolTip = ("Path donde se encuentran las listas de Radios Onlines")
+    }
+    { pbxConfig PictureBox
+      MoveScaled(105,2,15,12)
+      Picture = Picture["icon:/64/system"]
+    }
+    { lblPathDvArchivos Label
+      MoveScaled(2,23.7143,20,3)
+      Font = Font["+1"]
+      ToolTip = ("Path donde se encuentrasn las configuraciones de los efectos")
+      Text = ("Path Nav. Archivos")
+    }
+    { tbxPathDvArchivos TextBox
+      MoveScaled(27,23.7143,65,4)
+    }
+    Index = 1
+    Text = ("Radios Online")
+    { btnConfigAgregar Button
+      MoveScaled(82,22,9,5)
+      ToolTip = ("Agragar / Editar radio online")
+      Text = ("Agregar")
+    }
+    { btnConfigEditar Button
+      MoveScaled(43,3,9,5)
+      ToolTip = ("Editar una radio online de la lista")
+      Text = ("Editar")
+    }
+    { btnConfigEliminar Button
+      MoveScaled(43,20,9,5)
+      ToolTip = ("Eliminar una radio online de la lista")
+      Text = ("Eliminar")
+    }
+    { lblConfigNombreRadio Label
+      MoveScaled(61,3,9,4)
+      Text = ("Nombre:")
+    }
+    { lblConfigUrlRadio Label
+      MoveScaled(61,12,9,4)
+      Text = ("Url:")
+    }
+    { tbConfigRadioNombre TextBox
+      MoveScaled(61,6,31,4)
+      ToolTip = ("Nombre de la radio online")
+    }
+    { tbConfigRadioUrl TextBox
+      MoveScaled(61,15,31,4)
+      ToolTip = ("Url donde transmite la radio online")
+    }
+    { clvRadiosOnline ColumnView
+      MoveScaled(1,3,41,22)
+    }
+    { pbxRadiosOnline PictureBox
+      MoveScaled(105,1,14,12)
+      Picture = Picture["icon:/64/media-player"]
+    }
+    Index = 2
+    Text = ("Efectos")
+    { clvEfectos ColumnView
+      MoveScaled(1,3,41,22)
+    }
+    { tbConfigEfectos TextBox
+      MoveScaled(56,6,31,4)
+    }
+    { lblConfigNombreRadio2 Label
+      MoveScaled(56,3,9,4)
+      Text = ("Nombre:")
+    }
+    { btnConfigEditarEfectos Button
+      MoveScaled(43,3,9,5)
+      ToolTip = ("Editar un efecto de la lista")
+      Text = ("Editar")
+    }
+    { btnConfigEliminarEfectos Button
+      MoveScaled(43,20,9,5)
+      ToolTip = ("Eliminar un efecto de la lista")
+      Text = ("Eliminar")
+    }
+    { btnConfigEfectosAgregar Button
+      MoveScaled(80,12,9,5)
+      ToolTip = ("Agregar / Editar un efecto de la lista")
+      Text = ("Agregar")
+    }
+    { btnSeleccionarArchivo Button
+      MoveScaled(89,6,4,4)
+      ToolTip = ("Seleccione un archivo en su disco, red local o internet")
+      Picture = Picture["icon:/22/open"]
+    }
+    { pbxEfectos PictureBox
+      MoveScaled(104,2,14,12)
+      Picture = Picture["icon:/64/wizard"]
+    }
+    { lblNota Label
+      MoveScaled(1,26,44,7)
+      Text = ("Nota: El orden de la lista, se corresponde con el \nnúmero del botón efecto. \nEj: Posición 1 -> Botón 1")
+    }
+    Index = 0
+  }
+  { btnGuardar Button
+    MoveScaled(53,40,12,4)
+    ToolTip = ("Guardar los cambios y reflejar en el sistema")
+    Text = ("Guardar")
+  }
+  { btnCancelar Button
+    MoveScaled(67,40,12,4)
+    ToolTip = ("Cancelar todos los cambios realizados")
+    Text = ("Cancelar")
+  }
+}

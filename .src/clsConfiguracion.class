@@ -1,0 +1,230 @@
+' Gambas class file
+
+Private pathConfiguracion As String
+
+Private pathNucleo As String
+Private pathHorarias As String
+Private pathRadiosOnline As String
+Private pathLectorTag As String
+Private pathsocket As String
+Private pathEfectos As String
+Private pathDvArchivos As String
+Private interprete As ClsInterprete
+
+Public Sub _new(path As String, interpreteExt As ClsInterprete)
+
+  pathConfiguracion = path
+  interprete = interpreteExt
+
+End
+
+Public Function generar(pathNucleoExt As String, pathHorariasExt As String, pathRadiosOnlineExt As String, pathLectorTagsExt As String, pathEfectosExt As String, pathDvArchivosExt As String)
+
+  pathNucleo = pathNucleoExt
+  pathHorarias = pathHorariasExt
+  pathRadiosOnline = pathRadiosOnlineExt
+  pathLectorTag = pathLectorTagsExt
+  pathEfectos = pathEfectosExt
+  pathDvArchivos = pathDvArchivosExt
+End
+
+Public Function guardar()
+
+  persistir()
+
+End
+
+Public Function getPathSocket() As String
+
+  Return (pathsocket)
+
+End
+
+Public Function getPathNucleo() As String
+
+  Return (pathNucleo)
+
+End
+
+Public Function getPathRadiosOnline() As String
+
+  Return (pathRadiosOnline)
+
+End
+
+Public Function getPathLectorTag() As String
+
+  Return (pathLectorTag)
+
+End
+
+Public Function getPathHorarias() As String
+
+  Return (pathHorarias)
+
+End
+
+Public Function getPathEfectos() As String
+
+  Return (pathEfectos)
+
+End
+
+Public Function getPathDvArchivos() As String
+  Return (pathDvArchivos)
+End
+
+
+Public Function cargar()
+
+  Dim sdata As String
+  Dim archivo As File
+  Dim data As String[]
+  Dim inteprete As ClsInterprete
+
+  inteprete = New ClsInterprete("#")
+  
+  If Exist(pathConfiguracion)
+  
+      archivo = Open pathConfiguracion For Read
+    
+      While Not Eof(archivo)
+        Line Input #archivo, sdata
+        data = inteprete.interpretar(sdata)
+        Select Case data[0]
+    
+          Case "nucleo"
+            Select Case data[1]
+    
+              Case "path"
+                pathNucleo = data[2]
+              Case "socket"
+                pathsocket = data[2]
+    
+            End Select
+    
+          Case "horarias"
+            Select Case data[1]
+              Case "path"
+                pathHorarias = data[2]
+            End Select
+    
+          Case "lectorTag"
+            Select Case data[1]
+              Case "path"
+                pathLectorTag = data[2]
+            End Select
+    
+          Case "radiosOnline"
+            Select Case data[1]
+              Case "path"
+                pathRadiosOnline = data[2]
+            End Select
+    
+          Case "efectos"
+            Select Case data[1]
+              Case "path"
+                pathEfectos = data[2]
+            End Select
+          
+          Case "dvArchivos"
+            Select Case data[1]
+              Case "path"
+                pathDvArchivos = data[2]
+            End Select
+    
+        End Select
+    
+      Wend
+  Else
+      crearConfiguracion()
+  Endif
+
+End
+
+Public Function crearConfiguracion()
+  
+  pathConfiguracion = User.Home &/ ".libertics/libreradio/resources/configPrincipal.cfg"
+  pathNucleo = User.Home &/ ".libertics/libreradio/core/MainCore.py"
+  pathHorarias = User.Home &/ ".libertics/libreradio/resources/locuciones/horarias/"
+  pathRadiosOnline = User.Home &/ ".libertics/libreradio/resources/configs/configRadiosOnline.cfg"
+  pathLectorTag = User.Home &/ ".libertics/libreradio/resources/tags/tags.py"
+  pathsocket = User.Home &/ ".libertics/libreradio/core/socket.sok"
+  pathEfectos = User.Home &/ ".libertics/libreradio/resources/configs/configEfectos.cfg"
+  pathDvArchivos = User.Home 
+  
+  persistir()
+  cargar()
+End
+
+
+Public Function persistir()
+
+  Dim archivo As File
+  Dim i As Integer
+  Dim data As String[]
+  
+  archivo = Open pathConfiguracion For Create
+  
+  data = New String[]
+  
+  ' Configuracion de nucleo
+  data.Add("nucleo")
+  data.Add("path")
+  data.Add(pathNucleo)
+
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+  
+  data.Add("nucleo")
+  data.Add("socket")
+  data.Add(pathsocket)
+   
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+  
+  'Configuracion de horarias
+  data.Add("horarias")
+  data.Add("path")
+  data.Add(pathHorarias)
+   
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+  
+  'Configuracion de LectorTag
+  data.Add("lectorTag")
+  data.Add("path")
+  data.Add(pathLectorTag)
+   
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+  
+  'Configuracion de radiosOnline
+  data.Add("radiosOnline")
+  data.Add("path")
+  data.Add(pathRadiosOnline)
+   
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+  
+  'Configuracion de efectos
+  data.Add("efectos")
+  data.Add("path")
+  data.Add(pathEfectos)
+   
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+  
+  
+  'Configuracion de dvArchivos
+  data.Add("dvArchivos")
+  data.Add("path")
+  data.Add(pathDvArchivos)
+   
+  Write #archivo, interprete.codificar(data) & "\n"
+  data.Clear()
+
+
+  archivo.Close()
+
+End

@@ -1,0 +1,39 @@
+' Gambas class file
+PRIVATE nucleo AS clsNucleo
+PRIVATE pathLocuciones AS String
+PRIVATE codHora AS String
+PRIVATE codMinuto AS String
+PRIVATE formato AS String
+
+PUBLIC SUB _new(nucleoExt AS clsNucleo, pathLocucionesExt AS String, codHoraExt AS String, codMinutoExt AS String, formatoExt AS String)
+  nucleo = nucleoExt
+  pathLocuciones = pathLocucionesExt
+  codHora = codHoraExt
+  codMinuto = codMinutoExt
+  formato = formatoExt
+END
+
+PUBLIC FUNCTION locucion()
+  DIM argumentos AS String[]
+  
+  argumentos = NEW String[]
+  
+  argumentos.Add("evento")
+  argumentos.Add("reproducir")
+  argumentos.Add(pathLocuciones & codHora & Format(Now(), "hh") & formato)
+  argumentos.Add(pathLocuciones & codMinuto & Format(Now(), "nn") & formato)
+  
+  nucleo.evento(argumentos)
+  
+END
+
+PUBLIC FUNCTION getComando() AS String[]
+  DIM argumentos AS String[]
+  
+  argumentos.Add("evento")
+  argumentos.Add("reproducir")
+  argumentos.Add(pathLocuciones & codHora & Format(Now(), "hh") & formato)
+  argumentos.Add(pathLocuciones & codMinuto & Format(Now(), "nn") & formato)
+  
+  RETURN (argumentos)
+END

@@ -1,0 +1,55 @@
+' Gambas class file
+
+Private interCaracter As String
+
+Public Sub _new(codInter As String)
+
+  interCaracter = codInter
+
+End
+
+Public Function interpretar(codif As String) As String[]
+
+  Dim decod As String[]
+  Dim i As Integer
+
+  decod = Split(codif, interCaracter)
+
+  For i = 0 To (decod.Count - 1)
+
+    Try decod[i] = (Split(decod[i], "[]"))[1]
+
+    If Error
+
+      ' Evento para error al intentar decodificar
+
+    Endif
+
+  Next
+
+  Return (decod)
+
+End
+
+Public Function codificar(bruto As String[]) As String
+
+  Dim i As Integer
+  Dim codificado As String
+
+  For i = 0 To (bruto.Count - 2)
+
+    bruto[i] = "[" & bruto[i] & "]#"
+
+  Next
+
+  bruto[bruto.Count - 1] = "[" & bruto[bruto.Count - 1] & "]"
+
+  For i = 0 To (bruto.Count - 1)
+
+    codificado &= bruto[i]
+
+  Next
+
+  Return (codificado)
+
+End

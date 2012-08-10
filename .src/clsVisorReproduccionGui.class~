@@ -1,0 +1,142 @@
+' Gambas class file
+' Contenedor
+PRIVATE contenedor AS Frame
+
+' Ahora
+PRIVATE ahoraAire AS Label
+PRIVATE ahoraDuracion AS Label
+PRIVATE ahoraInicio AS Label
+PRIVATE ahoraFin AS Label
+
+' Siguiente
+PRIVATE siguienteAire AS Label
+PRIVATE siguienteDuracion AS Label
+PRIVATE siguienteInformacion AS Label
+
+' Información Central 
+PRIVATE centralContenedor AS Frame
+PRIVATE centralLblDuracionListaText AS Label
+PRIVATE centralLblDuracionLista AS Label
+
+PRIVATE centralLblDuracionSeleccionText AS Label
+PRIVATE centralLblDuracionSeleccion AS Label
+
+
+
+PUBLIC SUB _new(contenedorExt AS Frame)
+  contenedor = contenedorExt
+END
+
+' Visor Ahora 
+PUBLIC FUNCTION genAhora(aire AS Label, duracion AS Label, inicio AS Label, fin AS Label)
+  ahoraAire = aire
+  ahoraDuracion = duracion
+  ahoraInicio = inicio
+  ahoraFin = fin
+END
+
+
+PUBLIC FUNCTION graficar()
+
+  ahoraAire.Width = (contenedor.Width - 4)
+  ahoraAire.Height = 20
+
+  ahoraDuracion.Width = (contenedor.Width - 4)
+  ahoraDuracion.Height = 20
+
+
+
+  ahoraInicio.Width = (contenedor.Width - 4)
+  ahoraInicio.Height = 20
+  
+
+  ahoraFin.Width = (contenedor.Width - 4)
+  ahoraFin.Height = 20
+  
+END
+
+PUBLIC FUNCTION graficarSiguente()
+  siguienteAire.Width = (contenedor.Width - 15)
+  siguienteAire.Height = 20
+
+  siguienteDuracion.Width = (contenedor.Width - 15)
+  siguienteDuracion.Height = 20
+
+
+
+  siguienteInformacion.Width = (contenedor.Width - 15)
+  siguienteInformacion.Height = 20
+
+END
+
+
+PUBLIC FUNCTION setAhoraAire(texto AS String)
+  ahoraAire.Text = texto
+END
+
+PUBLIC FUNCTION setAhoraDuracion(texto AS String)
+  ahoraDuracion.Text = texto
+END
+
+PUBLIC FUNCTION setAhoraInicio(texto AS String)
+  ahoraInicio.Text = texto
+END
+
+PUBLIC FUNCTION setAhoraFin(texto AS String)
+  ahoraFin.Text = texto
+END
+
+
+' Visor Siguiente
+
+PUBLIC FUNCTION genSiguiente(aire AS Label, duracion AS Label, informacion AS Label)
+  siguienteAire = aire
+  siguienteDuracion = duracion
+  siguienteInformacion = informacion
+END
+
+
+PUBLIC FUNCTION setSiguienteAire(texto AS String)
+  siguienteAire.Text = texto
+END
+
+PUBLIC FUNCTION setSiguienteDuracion(texto AS String)
+  siguienteDuracion.Text = texto
+END
+
+PUBLIC FUNCTION setSiguienteInformacion(texto AS String)
+  siguienteInformacion.Text = texto
+END
+
+
+' Controles de Información de listas
+PUBLIC FUNCTION generarInformacionCentral(contenedorExt AS Frame, lblDuracionListaText AS Label, lblDuracionLista AS Label, lblDuracionSeleccionText AS Label, lblDuracionSeleccion AS Label)
+  centralContenedor = contenedorExt
+  centralLblDuracionListaText = lblDuracionListaText
+  centralLblDuracionLista = lblDuracionLista
+  centralLblDuracionSeleccionText = lblDuracionSeleccionText
+  centralLblDuracionSeleccion = lblDuracionSeleccion
+END
+
+PUBLIC FUNCTION redibujarInformacionCentral()
+  
+  centralLblDuracionListaText.X = 6
+  centralLblDuracionLista.X = 10
+  
+  centralLblDuracionSeleccionText.X = 6
+  centralLblDuracionSeleccion.X = 10
+  
+  centralLblDuracionListaText.Width = centralContenedor.Width - 10
+  centralLblDuracionLista.Width = centralContenedor.Width - 16
+  
+  centralLblDuracionSeleccionText.Width = centralContenedor.Width - 10
+  centralLblDuracionSeleccion.Width = centralContenedor.Width - 16
+END
+
+PUBLIC FUNCTION setCentralDuracionLista(duracion AS String)
+  centralLblDuracionLista.Text = duracion
+END
+
+PUBLIC FUNCTION setCentralDuracionSeleccion(duracion AS String)
+  centralLblDuracionSeleccion.Text = duracion
+END

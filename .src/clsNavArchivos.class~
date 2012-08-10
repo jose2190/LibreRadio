@@ -1,0 +1,63 @@
+' Gambas class file
+
+Private gui As ClsNavArchivosGui
+Private manipuladorResource As ClsResources
+
+Public Sub _new(listaDeArchivos As ListBox, dvArchivos As DirChooser)
+  gui = New ClsNavArchivosGui(listaDeArchivos, dvArchivos)
+End
+
+Public Function setManipuladorResource(manipuladorExt As ClsResources)
+  manipuladorResource = manipuladorExt
+End
+
+
+Public Function cambioDirectorio()
+  Dim archivos As String[]
+  Dim archivoRec As String
+  Dim errores As Boolean
+  Dim path As String
+  
+  errores = gui.getPermisos()
+    
+    If Not errores
+        gui.limpiarLista()
+        archivos = New String[]
+        path = gui.getPathDir()
+        
+        For Each archivoRec In Dir(path, "*.wav").Sort()
+            archivos.Add(archivoRec)
+        Next
+          
+        For Each archivoRec In Dir(path, "*.ogg").Sort()
+            archivos.Add(archivoRec)
+        Next
+        
+        For Each archivoRec In Dir(path, "*.mp3").Sort()
+            archivos.Add(archivoRec)
+        Next
+        
+        For Each archivoRec In Dir(path, "*.flv").Sort()
+            archivos.Add(archivoRec)
+        Next
+        
+        archivos = archivos.Sort(gb.Ascent)
+        gui.actualizarLista(archivos)
+        
+    Else
+      manipuladorResource.getError("dirLst1")
+    Endif
+
+End
+
+
+Public Function getArchivos() As String[]
+  Return (gui.getArchivosLista())
+End
+
+Public Function setDirDefecto(path As String)
+  
+  gui.setDirDefecto(path)
+  
+End
+

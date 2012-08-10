@@ -1,0 +1,21 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,99,66)
+  Resizable = False
+  { pbxLogoLibertics PictureBox
+    MoveScaled(10,1,76,17)
+    Picture = Picture["resources/logo-libertics.png"]
+    Stretch = True
+  }
+  { TextArea1 TextArea
+    MoveScaled(3,20,93,35)
+    Text = ("LiberTICs nace allá por finales del año 2010, del área TLIC (Tecnologías Libres de Información y Comunicaciones) de una Cooperativa de Trabajo donde funciona desde 2006 la “Primer Radio FM migrada 100% a GNU/Linux de la Provincia de Misiones“\n\nLa divulgación en el uso, aprovechamiento y apropiación de esta forma de ver y vivir la tecnología es la piedra angular sobre la cual concebimos la idea de LiberTICs.\n\nEsta visión va más allá de las enormes bondades técnicas del Software Libre, apuntamos al trabajo y formación de conocimiento y cultura en comunidad de forma colaborativa y cooperativa en igualdad de oportunidades, donde el único límite son las ganas de aprender y compartir.\n\nLos profesionales que conformamos LiberTICs tenemos más de 10 años en el campo de la Informática Libre, asistiendo en la migración de varias empresas y profesionales de la región. Muchos de nosotros somos parte activa de MiSoL, que es el grupo de usuarios de Software Libre de la Provincia de Misiones, y algunos miembros son fundadores del mismo, lo que marca nuestro compromiso.\n\nLiberTICs es un ámbito donde el compartir conocimiento no está vetado, el grupo esta formado por Ingenieros en Sistemas, Docentes Técnicos, Técnicos Informáticos, Periodistas, Estudiantes, y Autodidactas Curiosos ávidos por aprender, entender y lo más importante compartir.\n… El Conocimiento Compartido no se Pierde… Se Multiplica!!!…")
+    ReadOnly = True
+    Wrap = True
+  }
+  { btnCerrar Button
+    MoveScaled(79,60,16,4)
+    Text = ("Cerrar")
+  }
+}

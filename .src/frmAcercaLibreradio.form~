@@ -1,0 +1,31 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,65,38)
+  Resizable = False
+  Arrangement = Arrange.Vertical
+  Spacing = True
+  Margin = True
+  { pbxLibreradio PictureBox
+    MoveScaled(4,-7.5714,50,19)
+    Picture = Picture["resources/logo.png"]
+    Stretch = True
+  }
+  { txaLicencia TextArea
+    MoveScaled(1,8,63,24)
+    Text = ("<LibreRadio - Sistema de Autocontrol para Radios.>\nCopyright (C) <2012>  <Pedro José Pezzarini>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or \nany later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.")
+  }
+  { HBox1 HBox
+    MoveScaled(2,33,66,4)
+    Spacing = True
+    { Panel1 Panel
+      MoveScaled(4,0,4,4)
+      Expand = True
+    }
+    { btnOK Button
+      MoveScaled(45,0,16,4)
+      Text = ("OK")
+      Default = True
+    }
+  }
+}

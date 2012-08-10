@@ -1,0 +1,586 @@
+' Gambas class file
+
+Private duracionTotal As Integer[]
+Private cantArchivos As Integer
+Private ultimoEnviado As Integer
+
+Private manipulador As ClsManipulador
+
+Private nombres As String[]
+Private urls As String[]
+Private duracion As String[]
+Private estados As String[]
+
+Private gui_lista As ClsListasGui
+
+Private infinita As Boolean
+
+Private persistencia As ClsListasPersistencia
+
+Public Sub _new()
+
+  nombres = New String[]
+  urls = New String[]
+  duracion = New String[]
+  estados = New String[]
+
+  cantArchivos = 0
+  duracionTotal = New Integer[3]
+  duracionTotal[0] = 0
+  duracionTotal[1] = 0
+  duracionTotal[2] = 0
+  ultimoEnviado = -1
+  gui_lista = New ClsListasGui
+
+  infinita = True
+  
+  persistencia = New ClsListasPersistencia
+End
+
+Public Function setManipulador(manipulador0 As ClsManipulador)
+
+  manipulador = manipulador0
+
+End
+
+Public Function setGui(gui_elem As ColumnView)
+
+  gui_lista.setLista(gui_elem)
+
+End
+
+Public Function Agregar(data As Object[]) As Boolean
+
+  Dim aNombres As String[]
+  Dim aUrls As String[]
+  Dim aDuraciones As String[]
+
+  Dim i As Integer
+
+  aNombres = data[0]
+  aUrls = data[1]
+  aDuraciones = data[2]
+
+  For i = 0 To aUrls.Count - 1
+    nombres.Add(aNombres[i])
+    urls.Add(aUrls[i])
+    duracion.Add(aDuraciones[i])
+    estados.Add("-")
+
+  Next
+
+  cantArchivos = urls.Count
+  recalcular()
+  reDibujar()
+
+End
+
+Public Function Pisar(data As String[], arg As Integer)
+
+  nombres[arg] = data[0]
+  urls[arg] = data[1]
+  duracion[arg] = data[2]
+  recalcular()
+
+End
+
+Public Function Borrar()
+
+  Dim elementos As Integer[]
+  Dim i As Integer
+
+  elementos = gui_lista.seleccionados()
+  elementos.Reverse()
+
+  For i = 0 To elementos.Count - 1
+
+    If elementos[i] = ultimoEnviado
+      Message.Info("Selecciono eliminar el tema actual en reproduccion.")
+    Else
+      
+      If elementos[i] < ultimoEnviado
+        ultimoEnviado -= 1
+      Endif
+      
+      nombres.Remove(elementos[i])
+      urls.Remove(elementos[i])
+      duracion.Remove(elementos[i])
+      estados.Remove(elementos[i])
+    
+    Endif
+    
+
+    
+
+  Next
+
+  cantArchivos = urls.Count
+  recalcular()
+  reasignarUltimo()
+  reDibujar()
+End
+
+Public Function Subir()
+
+  Dim x As Integer
+  Dim nombresAux As String
+  Dim urlsAux As String
+  Dim duracionAux As String
+  Dim estadosAux As String
+  Dim enfoque As Integer[]
+
+  enfoque = New Integer[]
+  x = gui_lista.getSeleccionUnica()
+
+  If x - 1 >= 0
+    
+    If ultimoEnviado == x
+      ultimoEnviado = x - 1
+    Else
+      
+      If ultimoEnviado == x - 1
+        ultimoEnviado = x 
+      Endif
+      
+    Endif
+    
+
+    nombresAux = nombres[x - 1]
+    urlsAux = urls[x - 1]
+    duracionAux = duracion[x - 1]
+    estadosAux = estados[x - 1]
+
+    nombres[x - 1] = nombres[x]
+    urls[x - 1] = urls[x]
+    duracion[x - 1] = duracion[x]
+    estados[x - 1] = estados[x]
+
+    nombres[x] = nombresAux
+    urls[x] = urlsAux
+    duracion[x] = duracionAux
+    estados[x] = estadosAux
+
+    
+    
+    Else
+      manipulador.getError("lst1")
+  Endif
+  
+  reasignarUltimo()
+  reDibujar(x)
+
+End
+
+Public Function Bajar()
+
+  Dim x As Integer
+  Dim nombresAux As String
+  Dim urlsAux As String
+  Dim duracionAux As String
+  Dim estadosAux As String
+
+  Dim seleccion As Integer[]
+
+  seleccion = New Integer[]
+
+  x = gui_lista.getSeleccionUnica()
+  If gui_lista.existe(x)
+    If x + 1 <= urls.Count - 1
+      nombresAux = nombres[x + 1]
+      urlsAux = urls[x + 1]
+      duracionAux = duracion[x + 1]
+      estadosAux = estados[x + 1]
+
+      nombres[x + 1] = nombres[x]
+      urls[x + 1] = urls[x]
+      duracion[x + 1] = duracion[x]
+      estados[x + 1] = estados[x]
+
+      nombres[x] = nombresAux
+      urls[x] = urlsAux
+      duracion[x] = duracionAux
+      estados[x] = estadosAux
+
+      reasignarUltimo()
+      reDibujar()
+    Else
+      seleccion.Add(x)
+      gui_lista.enfocar(seleccion)
+    Endif
+  Else
+    manipulador.getError("lst1")
+  Endif
+
+    If ultimoEnviado == x
+      ultimoEnviado = x + 1
+    Else
+      
+      If ultimoEnviado == x + 1
+        ultimoEnviado = x 
+      Endif
+      
+    Endif
+    
+    reDibujar(x + 1)
+  
+End
+
+Public Function Siguiente() As String[]
+
+  Dim siguienteTrack As String[]
+
+  siguienteTrack = New String[]
+ 
+  If ((ultimoEnviado + 1) >= 0) And ((ultimoEnviado + 1) <= urls.Count - 1)
+
+    siguienteTrack.Add(nombres[ultimoEnviado + 1])
+    siguienteTrack.Add(urls[ultimoEnviado + 1])
+    siguienteTrack.Add(duracion[ultimoEnviado + 1])
+    estados[ultimoEnviado + 1] = "-"
+
+    ultimoEnviado = ultimoEnviado + 1
+    
+    reDibujar()
+  Else
+    siguienteTrack.Add("0")
+    siguienteTrack.Add("0")
+    siguienteTrack.Add("0")
+  Endif
+
+  Return (siguienteTrack)
+
+End
+
+Public Function getActual() As String[]
+
+  Dim siguienteTrack As String[]
+
+  If ultimoEnviado >= 0
+    siguienteTrack = New String[]
+    siguienteTrack.Add(nombres[ultimoEnviado])
+    siguienteTrack.Add(urls[ultimoEnviado])
+    siguienteTrack.Add(duracion[ultimoEnviado])
+    estados[ultimoEnviado] = "R"
+
+    redibujar()
+
+  Else
+    siguienteTrack.Add("0")
+    siguienteTrack.Add("0")
+    manipulador.getError("cortina-norep")
+  Endif
+
+  Return (siguienteTrack)
+
+End
+
+Public Function getPreSiguiente() As String[]
+
+  Dim siguienteTrack As String[]
+
+  siguienteTrack = New String[]
+
+  If ((ultimoEnviado + 1) >= 0) And ((ultimoEnviado + 1) <= urls.Count - 1)
+
+    siguienteTrack.Add(nombres[ultimoEnviado + 1])
+    siguienteTrack.Add(urls[ultimoEnviado + 1])
+    siguienteTrack.Add(duracion[ultimoEnviado + 1])
+
+  Else
+    siguienteTrack.Add("-1")
+    siguienteTrack.Add("-1")
+    siguienteTrack.Add("-1")
+  Endif
+
+  Return (siguienteTrack)
+
+End
+
+Public Function setUltimoEnviado(ultimo As Integer)
+
+  ultimoEnviado = ultimo
+
+End
+
+Public Function getUltimoEnviado() As Integer
+
+  Return (ultimoEnviado)
+
+End
+
+Public Function recalcular()
+
+  Dim i As Integer
+  Dim data As String[]
+  Dim duraciones As Integer[]
+
+  duraciones = New Integer[3]
+
+  For i = 0 To duracion.Count - 1
+    data = Split(duracion[i], ":")
+    data.Reverse()
+
+    If data.Count > 2
+      duraciones[2] = Int(data[2])
+    Endif
+
+    duraciones[0] += CInt(data[0])
+    duraciones[1] += CInt(data[1])
+  Next
+
+  While duraciones[0] > 59
+    duraciones[1] += 1
+    duraciones[0] -= 60
+  Wend
+
+  While duraciones[1] > 59
+    duraciones[2] += 1
+    duraciones[1] -= 60
+  Wend
+
+  duracionTotal = duraciones
+
+End
+
+Public Function getDuracion() As String
+
+  Return (getDuracionGen(duracionTotal))
+
+End
+
+Public Function getDuracionGen(dataS As Integer[]) As String
+
+  Dim hora As String
+  Dim minutos As String
+  Dim segundos As String
+
+  If dataS[2] < 10
+    segundos = "0"
+  Endif
+
+  If dataS[1] < 10
+    minutos = "0"
+  Endif
+
+  If dataS[0] < 10
+    hora = "0"
+  Endif
+
+  hora &= Str(dataS[2])
+  minutos &= Str(dataS[1])
+  segundos &= Str(dataS[0])
+
+  Return (hora & ":" & minutos & ":" & segundos)
+
+End
+
+Public Function getSeleccion() As String
+
+  Dim i As Integer
+  Dim data As String[]
+  Dim duraciones As Integer[]
+  Dim dataSelec As Integer[]
+
+  duraciones = New Integer[3]
+
+  dataSelec = gui_lista.seleccionados()
+
+  For i = 0 To dataSelec.Count - 1
+    data = Split(duracion[dataSelec[i]], ":")
+    data.Reverse()
+
+    If data.Count > 2
+      duraciones[2] = Int(data[2])
+    Endif
+
+    duraciones[0] += CInt(data[0])
+    duraciones[1] += CInt(data[1])
+  Next
+
+  While duraciones[0] > 59
+    duraciones[1] += 1
+    duraciones[0] -= 60
+  Wend
+
+  While duraciones[1] > 59
+    duraciones[2] += 1
+    duraciones[1] -= 60
+  Wend
+
+  Return (getDuracionGen(duraciones))
+
+End
+
+Public Function getConvertido(duracion As String) As Float
+
+  Dim data As String[]
+  Dim total As Float
+
+  data = Split(duracion, ":")
+  data.Reverse()
+
+  If data.Count > 2
+    data[1] = Str(CInt(data[1]) + (CInt(data[2]) * 60))
+  End If
+
+  If data.Count > 1
+    data[0] = Str(CInt(data[0]) + (CInt(data[1]) * 60))
+  Else
+    data[0] = "-1"
+  Endif
+
+  total = CFloat(data[0])
+
+  Return (total)
+
+End
+
+Public Function resetOrden()
+
+  Dim i As Integer
+
+  ultimoEnviado = -1
+
+  For i = 0 To urls.Count - 1
+    estados[i] = "-"
+  Next
+  reDibujar()
+
+End
+
+Public Function setOrden() As Boolean
+
+  Dim data As Integer
+  Dim respuesta As Boolean
+
+  data = gui_lista.getSeleccionUnica()
+
+  If data >= 0
+    ultimoEnviado = data - 1
+    respuesta = True
+  Else
+    respuesta = False
+  Endif
+
+  Return (respuesta)
+
+End
+
+Public Function reDibujar(Optional enfoque As Integer = -1)
+  resetEstados()
+  reasignarUltimo()
+  gui_lista.refrescar(nombres, urls, duracion, ultimoEnviado, estados, enfoque)
+
+End
+
+Public Function resetEstados()
+
+  Dim i As Integer
+
+  For i = 0 To urls.Count - 1
+    estados[i] = "-"
+  Next
+
+End
+
+Public Function reDibujarImplicito(value As Boolean)
+
+  If value
+    redibujar()
+  Else
+    gui_lista.refrescar(nombres, urls, duracion, -1, estados)
+  Endif
+
+End
+
+Public Function existeSiguiente() As Boolean
+
+  Dim respuesta As Boolean
+
+  If urls.Count - 1 < ultimoEnviado
+    respuesta = True
+  Else
+    respuesta = False
+  Endif
+
+  Return (respuesta)
+
+End
+
+Public Function setInfinita(valor As Boolean)
+
+  infinita = valor
+
+End
+
+Public Function getInfinita() As Boolean
+
+  Return (infinita)
+
+End
+
+Public Function resetLista()
+
+  ultimoEnviado = -1
+
+End
+
+Public Function reasignarUltimo()
+
+  Dim i As Integer
+  
+  For i = 0 To estados.Count - 1
+      estados[i] = "-"
+    Next
+  
+  If ultimoEnviado >= 0 And ultimoEnviado < estados.Count
+    estados[ultimoEnviado] = "R"
+  Endif
+  
+End
+
+Public Function cargarLista(path As String)
+
+  Dim lista As Object[]
+  lista = persistencia.cargar(path, manipulador.getInterprete())
+  Agregar(lista)
+End
+
+Public Function guardarLista(path As String)
+  Dim codif As String[]
+  Dim linea As String[]
+  Dim i As Integer
+  
+  
+  codif = New String[]
+  linea = New String[]
+  
+  For i = 0 To urls.Count - 1
+    
+    codif.Add(nombres[i])
+    codif.Add(urls[i])
+    codif.Add(duracion[i])
+    
+    linea.Add(manipulador.getInterprete().codificar(codif))
+    
+    codif.Clear()
+  Next
+  
+  persistencia.guardar((path & ".llr"), linea)
+End
+
+Public Function limpiarLista()  
+  nombres.Clear()
+  urls.Clear()
+  duracion.Clear()
+  estados.Clear()
+  resetLista()
+  
+  gui_lista.refrescar(nombres, urls, duracion, -1, estados, -1)
+End
+
+Public Function enfocar(indices As Integer[])
+  gui_lista.enfocar(indices)
+End
+
+

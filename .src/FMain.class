@@ -1,0 +1,633 @@
+' Gambas class file
+
+Public manipulador As ClsManipulador
+
+Public nucleo As ClsNucleo
+Public horarias As ClsHorarias
+
+Public lista As ClsListas
+Public tanda As ClsListas
+
+Public resources As ClsResources
+Public navArchivos As ClsNavArchivos
+Public radiosOnline As ClsRadiosOnline
+Public efectos As ClsEfectos
+
+Public visorReproduccion As ClsVisorReproduccion
+Public guiPrincipal As ClsGuiFmain
+
+Public configuracion As ClsConfiguracion
+Public interpreteConfig As ClsInterprete
+
+Public Sub _new()
+  ' Configuraciones
+  interpreteConfig = New ClsInterprete("#")
+  configuracion = New ClsConfiguracion(User.Home &/ ".libertics/libreradio/resources/configs/configPrincipal.cfg", interpreteConfig)
+  configuracion.cargar()
+  
+
+  ' Visores de reproduccion
+  visorReproduccion = New ClsVisorReproduccion(frmControlesAEA)
+  visorReproduccion.genAhora(lblControlesAEAEnAire, lblControlesAEAPosicion, lblControlesAEAInicio, lblControlesAEAFin)
+  visorReproduccion.genSiguiente(lblControlesSEASiguiente, lblControlesSEADuracion, lblControlesSEAurl)
+  visorReproduccion.generarInformacionCentral(FrmInformacion, lblInformacionDuracionListaText, lblInformacionDuracionListaInfo, lblInformacionDuracionSeleccionText, lblInformacionDuracionSeleccionInfo)
+
+  lista = New ClsListas
+  lista.setGui(ClvListas)
+  
+  tanda = New ClsListas
+  tanda.setGui(clvGenTandas)
+  
+  resources = New ClsResources(configuracion.getPathLectorTag())
+  resources.setGui(TbsFuentes)
+
+  navArchivos = New ClsNavArchivos(LBArchivos, DVDirectorios)
+  navArchivos.setManipuladorResource(resources)
+
+  radiosOnline = New ClsRadiosOnline(configuracion.getPathRadiosOnline(), CbxRadiosOnline, SpbRadiosOnlineHS, SpbRadiosOnlineMIN)
+  radiosOnline.setManipuladorResource(resources)
+
+  resources.setNavArchivos(navArchivos)
+  resources.setRadiosOnline(radiosOnline)
+
+  resources.setNavArchivosDirDefecto(configuracion.getPathDvArchivos())
+  
+  nucleo = New ClsNucleo(configuracion.getPathSocket(), configuracion.getPathNucleo())
+  horarias = New ClsHorarias(nucleo, configuracion.getPathHorarias(), "HRS", "MIN", ".ogg")
+
+  guiPrincipal = New ClsGuiFmain
+
+
+  ' Enlace al manipulador
+  manipulador = New ClsManipulador(nucleo, lista, resources, visorReproduccion, guiPrincipal)
+  manipulador.setLista(lista)
+  manipulador.setNucleo(nucleo)
+  manipulador.setResources(resources)
+
+  ' Enlace hacia el manipulador
+  nucleo.setManipulador(manipulador)
+  resources.setManipulador(manipulador)
+  lista.setManipulador(manipulador)
+  tanda.setManipulador(manipulador)
+  
+  ' Inicializador de nucleo
+  sldVolumen.Value = 9
+  nucleo.iniciarNucleo()
+  nucleo.inicializar((sldVolumen.Value))
+
+  radiosOnline.cargar()
+
+  efectos = New ClsEfectos(configuracion.getPathEfectos(), manipulador)
+
+  guiPrincipal.setBtnPisador(btnControlesPisador)
+  guiPrincipal.setBtnReproducir(btnControlesReproducir)
+
+End
+
+Public Sub Form_Close()
+
+  Dim rta As Integer
+
+  rta = Message.Question("¿Esta seguro que desea salir de LibreRadio?", "Salir", "Cancelar")
+
+  If rta == 1
+    nucleo.cerrarAire()
+  Else
+    Stop Event
+  Endif
+
+End
+
+Public Sub Form_Resize()
+  ' Principales
+
+  HBIndicadoresSuperiores.Width = Me.Width
+  HBIndicadoresSuperiores.Spacing = Me.Width / 200
+
+  HBControlesTrabajo.Width = Me.Width
+  HBControlesTrabajo.Height = Me.Height
+  HBControlesTrabajo.Spacing = Me.Width / 200
+
+  ' Contenedores
+
+  ' Indicadores Superiores
+  frmControlesAEA.Width = (frmControles.Width / 2) - 1
+  frmControlesAEA.Height = (frmControles.Height) - 18
+  frmControlesAEA.x = 2
+  frmControlesAEA.y = 15
+
+  frmControlesSEA.Width = (frmControles.Width / 2) - 5
+  frmControlesSEA.Height = (frmControles.Height) - 18
+  frmControlesSEA.x = frmControlesAEA.Width + 4
+  frmControlesSEA.y = 15
+
+  ' FRMFUENTES
+  HBFRMFuentes.x = 2
+  HBFRMFuentes.Width = frmfuentes.Width - 6
+  HBFRMFuentes.Height = frmfuentes.Height - (frmfuentes.Height / 3.5)
+
+  ' TABS
+  HBTabArchivos.Width = TbsFuentes.Width - 6
+  HBTabArchivos.Height = TbsFuentes.Height - 50
+
+  ' TAB 1
+  ' DVDirectorios.Height = HBTabArchivos.Height - 500
+  LBArchivos.Height = HBTabArchivos.Height - 6
+
+  ' TAB 2
+  FrmRadioOnline.x = 1
+  FrmRadioOnline.Width = TbsFuentes.Width - 6
+  CbxRadiosOnline.x = (FrmRadioOnline.Width - CbxRadiosOnline.Width) - FrmRadioOnline.Width / 4.5
+  pnlRadiosOnlineSpbox.X = (FrmRadioOnline.Width - pnlRadiosOnlineSpbox.Width) - FrmRadioOnline.Width / 4.5
+
+  FrmLocucionesALista.x = 1
+  FrmLocucionesALista.Width = TbsFuentes.Width - 6
+
+  ' TAB 3
+
+  ' POpc Información, (agregar / quitar) Efectos
+  frminformacion.Height = frmfuentes.Height / 3.5
+
+  ' FRMLISTAS
+  TbsListas.X = 2
+  TbsListas.Width = FrmListas.Width - 4
+  TbsListas.Height = (FrmListas.Height - (FrmListas.Height / 3.5))
+
+  ClvListas.Width = FrmListas.Width - 55
+  ClvListas.Height = TbsListas.Height - 122  
+
+  frmControlesLista.x = ClvListas.Width + 1
+  frmControlesLista.y = 1
+  frmControlesLista.Height = TbsListas.Height - 5
+  frmControles.Width = TbsListas.Width - 4
+  
+  
+  
+  
+  cbListaInfinita.Y = ClvListas.Height + frmControlesReproduccion.Height
+  cbListaInfinita.X = 4
+
+  frmControlesReproduccion.Y = ClvListas.Height
+
+  ' Visor Central y de Reproducción
+  visorReproduccion.redibujar()
+  visorReproduccion.redibujarInformacionCentral()
+  visorReproduccion.graficarSiguente()
+
+  ' FRM Controles de Reproducion
+  frmControlesReproduccion.X = 1
+  frmControlesReproduccion.Width = ClvListas.Width
+
+  btnControlesReproducir.x = 4
+  btnControlesReproducir.Width = (frmControlesReproduccion.Width / 2) - 4
+
+  btnControlesPisador.Width = (btnControlesReproducir.Width / 2) - 2
+  btnControlesPisador.x = btnControlesReproducir.width + (btnControlesReproducir.Width / 2)
+
+
+ 
+
+
+  cbCortina.x = btnControlesReproducir.x + btnControlesReproducir.Width
+  cbCortina.Width = btnControlesReproducir.Width / 2
+  cbCortina.Height = btnControlesReproducir.Height
+  cbCortina.y = btnControlesReproducir.Y
+  ' FRM Visor Central Información
+  FrmEfectos.y = (FrmInformacion.y + FrmInformacion.Height) + 10
+  
+  
+  ' FRM GENTANDAS
+  
+  clvGenTandas.Width = FrmListas.Width - 55
+  clvGenTandas.Height = ClvListas.Height
+  clvGenTandas.Width = FrmListas.Width - 55
+  clvGenTandas.x = 1
+  clvGenTandas.y = 1
+  frmControlesListaTandas.x = clvGenTandas.Width + 1
+  frmControlesListaTandas.y = 1
+  
+  btnGenTandasGuardar.y = clvGenTandas.Height + 3
+  btnGenTandasGuardar.x = 4
+  btnGenTandasGuardar.Width = (clvGenTandas.Width / 2) - 4
+
+  btnGenTandasCargar.y = clvGenTandas.Height + 3
+  btnGenTandasCargar.Width = (btnGenTandasGuardar.Width) - 2
+  btnGenTandasCargar.x = btnGenTandasGuardar.width
+
+End
+
+Public Sub BtnAgregar_Click()
+If TbsListas.Index == 0
+  lista.Agregar(resources.getResource())
+  manipulador.interaccionALista()
+Else
+  tanda.Agregar(resources.getResource())
+Endif
+
+End
+
+Public Sub sldVolumen_Change()
+
+  nucleo.volumen((sldVolumen.Value))
+
+End
+
+Public Sub btnControlesReproducir_Click()
+
+  manipulador.analizarEstado()
+
+End
+
+Public Sub btnControlesPisador_Click()
+
+  If (btnControlesPisador.Value)
+    btnControlesPisador.Picture = Picture["icon:/16/up"]
+    btnControlesPisador.Text = "Pisa&dor"
+    nucleo.pisar()
+    manipulador.setBtnPisador()
+  Else
+    btnControlesPisador.Picture = Picture["icon:/16/down"]
+    btnControlesPisador.Text = "Pisa&dor"
+    nucleo.elevar()
+    manipulador.unsetBtnPisador()
+  Endif
+  guiPrincipal.DeshabilitarPisador()
+
+End
+
+Public Sub chkSilencio_Click()
+
+  If chkSilencio.Value
+    nucleo.volumen(0)
+  Else
+    nucleo.volumen(sldVolumen.Value)
+  Endif
+
+End
+
+Public Sub btnLocHoraria_Click()
+
+  horarias.locucion()
+
+End
+
+Public Sub BtnEliminar_Click()
+If TbsListas.Index == 0
+  lista.Borrar()
+  manipulador.interaccionALista()
+Else
+  tanda.Borrar()
+Endif
+
+End
+
+Public Sub tmrHoraActual_Timer()
+
+  Dim hora As String
+  Dim minutos As String
+  Dim segundos As String
+
+  hora = Format(Now(), "hh")
+  minutos = Format(Now(), "nn")
+  segundos = Format(Now(), "ss")
+
+  If Len(hora) < 2
+    hora = "0" & hora
+  Endif
+
+  If Len(minutos) < 2
+    minutos = "0" & minutos
+  Endif
+
+  If Len(segundos) < 2
+    segundos = "0" & segundos
+  Endif
+  lblVisorHorarias.Text = hora & ":" & minutos & ":" & segundos
+
+End
+
+Public Sub ClvListas_Select()
+
+  manipulador.interaccionEnLista()
+
+End
+
+Public Sub ClvListas_DblClick()
+
+If manipulador.getInteraccionLista()
+  Message.Info("La cortina esta activada, desactiva la funcion cortina primero.")
+Else
+  manipulador.elementoImplicito()
+Endif
+End
+
+Public Sub DVDirectorios_Change()
+
+  resources.cambioDirectorio()
+
+End
+
+Public Sub LBArchivos_MouseDrag()
+
+  If Mouse.Left Then
+    ClvListas.Drag("{fromLibreRadio}")
+  Endif
+
+End
+
+Public Sub ClvListas_Drop()
+
+  If Drag.Data = "{fromLibreRadio}"
+    BtnAgregar_Click()
+  Else
+    manipulador.getError("ddexterno")
+  End If
+
+End
+
+Public Sub btnControlesDetener_Click()
+
+  manipulador.detenerReproductor()
+
+End
+
+Public Sub btnContolListaSubir_Click()
+
+  lista.Subir()
+  manipulador.interaccionALista()
+  
+End
+
+Public Sub btnContolListaBajar_Click()
+
+  lista.Bajar()
+  manipulador.interaccionALista()
+
+End
+
+Public Sub btnEfecto1_Click()
+
+  efectos.evento(1)
+
+End
+
+Public Sub MenuConfiguracion_Click()
+
+  frmConfig.abrirModal(configuracion, radiosOnline, efectos)
+  radiosOnline.cargar()
+
+End
+
+Public Sub btnEfecto2_Click()
+
+  efectos.evento(2)
+
+End
+
+Public Sub btnEfecto3_Click()
+
+  efectos.evento(3)
+
+End
+
+Public Sub btnEfecto4_Click()
+
+  efectos.evento(4)
+
+End
+
+Public Sub btnEfecto5_Click()
+
+  efectos.evento(5)
+
+End
+
+Public Sub btnEfecto6_Click()
+
+  efectos.evento(6)
+
+End
+
+Public Sub btnEfecto7_Click()
+
+  efectos.evento(7)
+
+End
+
+Public Sub cbListaInfinita_Click()
+
+  lista.setInfinita(cbListaInfinita.Value)
+
+End
+
+Public Sub btnEfecto8_Click()
+
+  efectos.evento(8)
+
+End
+
+Public Sub ItemListaCargar_Click()
+
+  If cbListaInfinita.Value
+    cbListaInfinita.Value = False
+  Else
+    cbListaInfinita.Value = True
+  Endif
+
+End
+
+Public Sub LBArchivos_DblClick()
+
+  BtnAgregar_Click()
+
+End
+
+Public Sub ItemLiberticsLibertics_Click()
+
+  frmAcercaLibertics.Show()
+
+End
+
+Public Sub ItemLiberticsLibreRadio_Click()
+
+  frmAcercaLibreradio.Show()
+
+End
+
+Public Sub ItemSalir_Click()
+
+  Me.Close()
+
+End
+
+Public Sub BtnLocucionesAListaHoraria_Click()
+
+  Dim nombres As String[]
+  Dim urls As String[]
+  Dim duraciones As String[]
+  Dim paquete As Object[]
+
+  nombres = New String[]
+  urls = New String[]
+  duraciones = New String[]
+
+  paquete = New Object[]
+
+  nombres.Add("Locución Horaria")
+  urls.Add("{LocucionHoraria}")
+  duraciones.Add("00:05")
+
+  paquete.Add(nombres)
+  paquete.Add(urls)
+  paquete.Add(duraciones)
+
+If TbsListas.Index == 0
+  lista.Agregar(paquete)
+  manipulador.interaccionALista()
+Else
+  tanda.Agregar(paquete)
+Endif
+
+End
+
+Public Sub cbCortina_Click()
+
+  If cbCortina.Value
+    manipulador.setCortina()
+  Else
+    manipulador.unsetCortina()
+  Endif
+
+End
+
+
+
+Public Sub ToggleButton1_Click()
+
+  lista.cargarLista("/home/jose/Escritorio/listaTest.llr")
+
+End
+
+Public Sub btnContolListaSubir2_Click()
+
+  Dim soporte As String[]
+
+  soporte = New String[]
+  soporte.Add("*.llr")
+  soporte.Add("Listas de LibreRadio")
+  Dialog.Title = "Seleccione una lista de Reproducción"
+  Dialog.Filter = soporte
+  
+  If Not Dialog.OpenFile(False)
+    lista.cargarLista(Dialog.Path)
+  Endif
+
+
+End
+
+Public Sub btnContolListaBajar2_Click()
+
+  Dim soporte As String[]
+
+  soporte = New String[]
+  soporte.Add("*.llr")
+  soporte.Add("Listas de LibreRadio")
+  Dialog.Title = "Seleccione una lista de Reproducción"
+  Dialog.Filter = soporte
+  
+  If Not Dialog.SaveFile()
+    lista.guardarLista(Dialog.Path)
+  Endif
+
+
+End
+
+Public Sub btnGenTandasGuardar_Click()
+
+   Dim soporte As String[]
+
+  soporte = New String[]
+  soporte.Add("*.llr")
+  soporte.Add("Listas de LibreRadio")
+  Dialog.Title = "Seleccione una lista de Reproducción"
+  Dialog.Filter = soporte
+  
+  If Not Dialog.SaveFile()
+   tanda.guardarLista(Dialog.Path)
+  Endif
+
+End
+
+Public Sub btnGenTandasCargar_Click()
+
+  Dim soporte As String[]
+
+  soporte = New String[]
+  soporte.Add("*.llr")
+  soporte.Add("Listas de LibreRadio")
+  Dialog.Title = "Seleccione una lista de Reproducción"
+  Dialog.Filter = soporte
+  
+  If Not Dialog.OpenFile(False)
+    tanda.cargarLista(Dialog.Path)
+  Endif
+
+End
+
+Public Sub btnContolListaTandasSubir_Click()
+
+  tanda.Subir()
+
+End
+
+Public Sub btnContolListaTandasBajar_Click()
+
+  tanda.Bajar()
+
+End
+
+Public Sub ClvGenTandas_Drop()
+
+   If Drag.Data = "{fromLibreRadio}"
+    BtnAgregar_Click()
+  Else
+    manipulador.getError("ddexterno")
+  End If
+
+End
+
+Public Sub btnContolListaTandasLimpiar_Click()
+
+  Dim rta As Integer
+
+  rta = Message.Question("¿Esta seguro que desea eliminar todos los elementos de la lista actual?", "Limpiar Lista", "Cancelar")
+
+  If rta == 1
+    tanda.limpiarLista()  
+  Endif
+
+End
+
+Public Function pantallaCompleta()
+  
+  Me.FullScreen = Not Me.FullScreen
+  
+End
+
+
+Public Sub ItempantallaCompleta_Click()
+  pantallaCompleta()
+End
+
+
+
+Public Sub FrmLogo_MouseDown()
+
+  
+
+End
+Public Function recargarConfiguracion()
+  resources.setNavArchivosDirDefecto(configuracion.getPathDvArchivos())
+End
+
+

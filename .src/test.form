@@ -1,0 +1,45 @@
+# Gambas Form File 3.0
+{ Form Form 
+  MoveScaled(0,0,107,64)
+  { Label1 Label 
+    MoveScaled(62,3,29,26)
+  }
+  { TextBox1 TextBox 
+    MoveScaled(61,33,23,4)
+  }
+  { Button1 Button 
+    MoveScaled(86,33,16,4)
+    Text = ("Enviar Comando")
+  }
+  { Slider1 Slider 
+    MoveScaled(97,6,5,17)
+    MaxValue = 10
+    PageStep = 1
+    Mark = True
+  }
+  { Timer1 #Timer 
+    #MoveScaled(0,0)
+  }
+  { Button2 Button 
+    MoveScaled(87,40,11,5)
+    Picture = Picture["icon:/32/up"]
+  }
+  { Button3 Button 
+    MoveScaled(87,46,11,5)
+    Picture = Picture["icon:/32/down"]
+  }
+  { Button4 Button 
+    MoveScaled(73,40,12,4)
+    Text = ("Horaria")
+  }
+  { DirChooser1 DirChooser 
+    MoveScaled(1,2,25,39)
+  }
+  { ListBox1 ListBox 
+    MoveScaled(28,3,26,38)
+  }
+  { Button5 Button 
+    MoveScaled(34,41,13,4)
+    Text = ("Reproducir")
+  }
+}

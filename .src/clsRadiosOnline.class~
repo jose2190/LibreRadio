@@ -1,0 +1,90 @@
+' Gambas class file
+PRIVATE pathLista AS String
+PRIVATE manipuladorResource AS clsResources
+PRIVATE gui AS clsRadiosOnlineGui
+PRIVATE persistencia AS clsRadiosOnlinePersist
+
+PRIVATE urls AS String[]
+PRIVATE nombres AS String[]
+
+PUBLIC SUB _new(pathListaExt AS String, listaBox AS ComboBox, spbHs AS SpinBox, spbMin AS SpinBox)
+  gui = NEW clsRadiosOnlineGui(listaBox, spbHs, spbMin)
+  pathLista = pathListaExt
+  persistencia = NEW clsRadiosOnlinePersist
+END
+
+PUBLIC FUNCTION setManipuladorResource(manipuladorResourceExt AS clsResources)
+  manipuladorResource = manipuladorResourceExt
+END
+
+
+PUBLIC FUNCTION cargar()
+  DIM data AS Object[]
+  data = persistencia.cargar(pathLista, manipuladorResource.getInterprete())
+  
+  nombres = data[0]
+  urls = data[1]
+  gui.cargar(nombres)
+END
+
+PUBLIC FUNCTION getRadioOnline() AS Object[]
+  DIM respuesta AS Object[]
+  DIM i AS Integer
+  DIM tagRetorno AS String[]
+  DIM urlsRetorno AS String[]
+  DIM duracionRetorno AS String[]
+  
+  
+  tagRetorno = NEW String[]
+  urlsRetorno = NEW String[]
+  duracionRetorno = NEW String[]
+  
+  respuesta = NEW Object[]
+  
+  i = gui.getActualRadio()
+  tagRetorno.Add(nombres[i])
+  urlsRetorno.Add(urls[i])
+
+  duracionRetorno.Add(gui.getDuracion())
+  
+  respuesta.Add(tagRetorno)
+  respuesta.Add(urlsRetorno)
+  respuesta.Add(duracionRetorno)
+  
+  RETURN (respuesta)
+END
+
+
+PUBLIC FUNCTION persistir()
+  DIM i AS Integer
+  DIM data AS String[]
+  DIM temps AS String[]
+  DIM interprete AS clsInterprete
+  
+  interprete = manipuladorResource.getInterprete()
+  data = NEW String[]
+  temps = NEW String[2]
+  FOR i = 0 TO urls.Count - 1
+    temps[0] = nombres[i]
+    temps[1] = urls[i]
+    data.Add(interprete.codificar(temps))
+  NEXT
+  
+  persistencia.guardar(pathLista, data)
+END
+
+PUBLIC FUNCTION getContent() AS Object[]
+  DIM respuesta AS Object[]
+  
+  respuesta = NEW Object[]
+  
+  respuesta.Add(nombres)
+  respuesta.Add(urls)
+  
+  RETURN (respuesta)
+END
+
+PUBLIC FUNCTION setContent(nombresExt AS String[], urlsExt AS String[])
+  nombres = nombresExt
+  urls = urlsExt
+END

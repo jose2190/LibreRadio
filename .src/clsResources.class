@@ -1,0 +1,135 @@
+' Gambas class file
+
+Private gui_Resources As ClsResourcesGui
+Private manipulador As ClsManipulador
+Private tagManip As String
+
+Private navArchivos As ClsNavArchivos
+Private radiosOnlines As ClsRadiosOnline
+
+Public Sub _new(tagManipExt As String)
+
+  gui_Resources = New ClsResourcesGui
+  tagManip = tagManipExt
+
+End
+
+Public Function setNavArchivos(navArcExt As ClsNavArchivos)
+
+  navArchivos = navArcExt
+
+End
+
+Public Function setRadiosOnline(rOnlines As ClsRadiosOnline)
+
+  radiosOnlines = rOnlines
+
+End
+
+Public Function setGui(gui_element As TabStrip)
+
+  gui_Resources.setTab(gui_element)
+
+End
+
+Public Function setManipulador(manip As ClsManipulador)
+
+  manipulador = manip
+
+End
+
+Public Function Tags(archivo As String) As String[]
+
+  Dim tag As String[]
+  Dim temps As String
+  Dim soporte As String[]
+
+  Exec ["python", tagManip, archivo] To temps
+
+  tag = manipulador.getInterprete().interpretar(temps)
+
+  If tag.Count < 1
+    ' Manejo de errores por lectura de datos
+    tag = New String[]
+    tag.Add("-1")
+    tag.Add("-1")
+    tag.Add("Posible error en archivo")
+  Endif
+
+  Return (tag)
+
+End
+
+Public Function getResource() As Object[]
+
+  Dim tab As Integer
+  Dim data As String[]
+  Dim retorno As Object[]
+
+  tab = gui_Resources.getActual()
+  retorno = New Object[]
+  Select Case tab
+    Case 0
+      data = navArchivos.getArchivos()
+      retorno = ensamblarNavArchivos(data)
+    Case 1
+      retorno = radiosOnlines.getRadioOnline()
+    Case 2
+
+    Case Else
+
+  End Select
+
+  Return (retorno)
+
+End
+
+Public Function ensamblarNavArchivos(listaArchivos As String[]) As Object
+
+  Dim i As Integer
+  Dim tagsTemp As String[]
+  Dim tagsRespuesta As String[]
+  Dim urlsRespuesta As String[]
+  Dim duracionesRespuesta As String[]
+  Dim respuesta As Object[]
+
+  respuesta = New Object[]
+  duracionesRespuesta = New String[]
+  urlsRespuesta = New String[]
+  tagsRespuesta = New String[]
+
+  For i = 0 To listaArchivos.Count - 1
+    tagsTemp = Tags(listaArchivos[i])
+    duracionesRespuesta.Add((tagsTemp[0] & ":" & tagsTemp[1]))
+    urlsRespuesta.Add(listaArchivos[i])
+    tagsRespuesta.Add(tagsTemp[2])
+  Next
+
+  respuesta.Add(tagsRespuesta, 0)
+  respuesta.Add(urlsRespuesta, 1)
+  respuesta.Add(duracionesRespuesta, 2)
+
+  Return (respuesta)
+
+End
+
+Public Function getError(data As String)
+
+  manipulador.getError(data)
+
+End
+
+Public Function cambioDirectorio()
+
+  navArchivos.cambioDirectorio()
+
+End
+
+Public Function getInterprete() As ClsInterprete
+  Return (manipulador.getInterprete())
+End
+
+Public Function setNavArchivosDirDefecto(path As String)
+  navArchivos.setDirDefecto(path)
+End
+

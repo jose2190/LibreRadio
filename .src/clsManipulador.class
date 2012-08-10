@@ -1,0 +1,462 @@
+' Gambas class file
+
+Private nucleo As ClsNucleo
+Private lista As ClsListas
+Private resources As ClsResources
+Private visorControlesReproduccion As ClsVisorReproduccion
+
+Private interprete As ClsInterprete
+
+Private estadoReproductor As Boolean
+Private estadoPausa As Boolean
+
+Private estadoPisador As Boolean
+Private estadoPisadorBTN As Boolean
+Private estadoEventos As Boolean
+' Elementos GUI
+Private guiPrincipal As ClsGuiFmain
+
+' Manejador de Reproduccion
+Private ultimoEnLista As Boolean
+Private horariasEstadoPendiente As Boolean
+Private cortina As Boolean
+
+'PRIVATE planificador AS clsPlanificador
+'PRIVATE complementos as clsComplementos
+
+Public Sub _new(nucleoExt As ClsNucleo, listaExt As ClsListas, resourcesExt As ClsResources, visorControlesReproduccionExt As ClsVisorReproduccion, guiPrinc As ClsGuiFmain)
+
+  ' la inicializacion del nucleo necesita almenos una posicion de memoria
+  ' para obtener el manipulador principal, debido a eso se migro el constructor al método construir
+  ' para que al generar un nuevo objeto Manipulador se pueda reservar una posicion de memoria para el nucleo :D
+  nucleo = nucleoExt
+  lista = listaExt
+  resources = resourcesExt
+  visorControlesReproduccion = visorControlesReproduccionExt
+  interprete = New ClsInterprete("#")
+
+  ultimoEnLista = False
+  guiPrincipal = guiPrinc
+
+  estadoReproductor = False
+  estadoPausa = False
+  estadoPisador = False
+  estadoEventos = False
+  horariasEstadoPendiente = False
+  cortina = False
+  estadoPisadorBTN = False
+
+End
+
+Public Function setNucleo(instancia_nucleo As ClsNucleo)
+
+  nucleo = instancia_nucleo
+
+End
+
+Public Function setLista(instancia_lista As ClsListas)
+
+  lista = instancia_lista
+
+End
+
+Public Function setResources(instancia_resources As ClsResources)
+
+  resources = instancia_resources
+
+End
+
+' Recepcion del nucleo
+
+Public Function analizar(respuesta As String)
+
+  Dim comandos As String[]
+  '
+  comandos = interprete.interpretar(respuesta)
+  Select Case comandos[0]
+
+    Case "posicion"
+      visorControlesReproduccion.setPosicion(comandos[1], comandos[2])
+      visorControlesReproduccion.actualizar()
+
+    Case "nucleo"
+      Select Case comandos[1]
+        Case "terminado"
+          estadoReproductor = False
+          analizarEstado()
+
+        Case Else
+          Debug
+
+      End Select
+      
+      
+      Case "error"
+      Select Case comandos[1]
+        Case "1"
+          Message.Info("Error al reproducir un archivo")
+          
+          resetReproductor()
+
+        Case Else
+          Debug
+
+      End Select
+
+    Case "pisador"
+      Select Case comandos[1]
+        Case "0"
+          If Not cortina
+            guiPrincipal.HabilitarPisador()
+          Endif
+          estadoPisador = False
+
+        Case Else
+          Print "Sin handler"
+      End Select
+
+    Case "evento"
+      Select Case comandos[1]
+
+        Case "proc"
+          ' Fin de reproducción de 1 elemento en evento
+        Case "nucleo"
+          If horariasEstadoPendiente
+            horariasEstadoPendiente = False
+            reproducirImplicito()
+          Else
+            estadoEventos = False
+          Endif
+          ' Fin de reproducción de todos los elementos del evento
+        Case "pisador"
+          ' Fin de proceso pisador
+
+        Case Else
+      End Select
+
+    Case "advertencia"
+      ' Advertencia de proceso
+
+    Case Else
+
+  End Select
+
+End
+
+' Tiggers de Listas
+Public Function listaFinalizada()
+
+  If lista.getInfinita()
+    lista.resetLista()
+    reproducirImplicito()
+  Else
+    estadoReproductor = False
+    guiPrincipal.BtnReproducirRep()
+    lista.resetEstados()
+    lista.resetLista()
+  Endif
+
+End
+
+Public Function elementoSubir()
+
+  lista.Subir()
+
+End
+
+Public Function elementoBajar()
+
+  lista.Bajar()
+
+End
+
+Public Function elementoaLista()
+
+End
+
+Public Function siguienteEnLista()
+
+End
+
+Public Function anteriorEnLista()
+
+End
+
+Public Function ultimoEnReproducir(valueBtn As Boolean)
+
+  ultimoEnLista = valueBtn
+
+End
+
+Public Function interaccionALista(Optional value As Boolean = True)
+
+  Dim data As String[]
+
+  visorControlesReproduccion.setCentralDuracionLista(lista.getDuracion())
+  visorControlesReproduccion.setClearCentralDuracionSeleccion()
+
+  data = lista.getPreSiguiente()
+
+  If data[0] = "-1"
+    visorControlesReproduccion.cargarSiguiente("---", "--:--", "---")
+  Else
+    visorControlesReproduccion.cargarSiguiente(data[0], data[2], data[1])
+  Endif
+
+  'lista.reDibujarImplicito(value)
+  lista.reDibujar()
+End
+
+Public Function interaccionEnLista()
+
+  visorControlesReproduccion.setCentralDuracionSeleccion(lista.getSeleccion())
+  
+End
+
+Public Function elementoImplicito()
+
+  lista.setOrden()
+  interaccionALista(False)
+  reproducirImplicito()
+  lista.reDibujar()
+End
+
+' Tiggers del Nucleo
+Public Function reproducirImplicito()
+
+  Dim data As String[]
+
+  If cortina
+    data = lista.getActual()
+    nucleo.reproducir(data[1], lista.getConvertido(data[2]))
+    estadoReproductor = True
+    guiPrincipal.BtnReproducirPau()
+  Else
+    data = lista.Siguiente()
+    If data.Count > 2
+      visorControlesReproduccion.cargar(data[0], "horainicio", "finaliza")
+      If data[1] == "{LocucionHoraria}" 
+        FMain.horarias.locucion()
+        horariasEstadoPendiente = True
+      Else
+        nucleo.reproducir(data[1], lista.getConvertido(data[2]))
+      Endif
+      
+      estadoReproductor = True
+      guiPrincipal.BtnReproducirPau()
+      
+    Else
+      listaFinalizada()
+    Endif
+  Endif
+  interaccionALista()
+  estadoPausa = False
+
+End
+
+Public Function pausarReproductor()
+
+  nucleo.pausar()
+
+End
+
+Public Function getEstadoReproductor() As Boolean
+
+  Return (estadoReproductor)
+
+End
+
+Public Function eventosTerminado()
+
+End
+
+Public Function detenerReproductor()
+
+  'ultimoEnLista = True
+  nucleo.detener()
+  visorControlesReproduccion.resetVisores()
+  lista.resetOrden()
+  estadoReproductor = False
+
+End
+
+' Tiggers Pisadores
+
+Public Function pisadorActivado()
+
+End
+
+Public Function pisadorTerminado()
+
+End
+
+' Tiggers de Resources
+
+' Tiggers del Planificador
+
+' Tiggers del Admin de Complementos
+
+' Manejador de recursos
+
+Public Function getInterprete() As ClsInterprete
+
+  Return (interprete)
+
+End
+
+' Manejo de errores y exceptions
+
+Public Function getError(cod As String)
+
+  Select Case cod
+
+    Case "lst1"
+      Message.Info("Debes seleccionar almenos un elemento de la lista para mover")
+    Case "lst2"
+
+    Case "cortina-norep"
+      Message.Info("Debe haber un elemento en reproducción, para activar la cortina")
+      cortina = False
+    Case "lst4"
+
+    Case Else
+      Message.Info("Error sin Handler")
+
+  End Select
+
+End
+
+' Manejo de tiggers de efectos
+
+Public Function repEvento(path As String)
+
+  Dim argumento As String[]
+
+  argumento = New String[]
+  argumento.Add("evento")
+  argumento.Add("reproducir")
+  argumento.Add(path)
+
+  nucleo.evento(argumento)
+
+End
+
+Public Function reproductorTerminado()
+
+  If lista.existeSiguiente()
+    reproducirImplicito()
+    Message.Info("Hay Siguiente")
+  Else
+    listaFinalizada()
+    estadoPausa = False
+    estadoReproductor = False
+    Message.Info("No hay siguiente")
+  Endif
+
+End
+
+Public Function analizarEstado()
+
+  lista.reDibujar()
+  If estadoReproductor
+    If estadoPausa
+      estadoPausa = False
+      nucleo.despausar()
+      guiPrincipal.BtnReproducirPau()
+    Else
+      estadoPausa = True
+      nucleo.pausar()
+      guiPrincipal.BtnReproducirRep()
+    Endif
+  Else
+    reproducirImplicito()
+  Endif
+
+End
+
+Public Function reproductorPausado()
+
+  guiPrincipal.BtnReproducirRep()
+  nucleo.pausar()
+
+End
+
+Public Function reproductorReproduciendo()
+
+  guiPrincipal.BtnReproducirPau()
+  nucleo.pausar()
+
+End
+
+Public Function setEstadoPisador()
+
+  estadoPisador = True
+  guiPrincipal.DeshabilitarPisador()
+
+End
+
+Public Function getEstadoPisador() As Boolean
+
+  Return (estadoPisador)
+
+End
+
+Public Function setEstadoEvento()
+
+  estadoEventos = True
+
+End
+
+Public Function getEstadoEventos() As Boolean
+
+  Return (estadoEventos)
+
+End
+
+Public Function setCortina()
+
+  cortina = True
+  If Not estadoPisadorBTN
+    nucleo.pisar()
+    estadoPisadorBTN = True
+  Endif
+  guiPrincipal.DeshabilitarPisador()
+
+End
+
+Public Function unsetCortina()
+
+  cortina = False
+  reproducirImplicito()
+  If estadoPisadorBTN
+    nucleo.elevar()
+    estadoPisadorBTN = False
+    guiPrincipal.resetPisador()
+  Endif
+
+End
+
+Public Function setBtnPisador()
+
+  estadoPisadorBTN = True
+
+End
+
+Public Function unsetBtnPisador()
+
+  estadoPisadorBTN = False
+
+End
+
+
+Public Function resetReproductor()
+
+  lista.resetOrden()
+  
+End
+
+Public Function getInteraccionLista() As Boolean
+
+  Return (cortina)
+End
+

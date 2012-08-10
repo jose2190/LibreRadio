@@ -1,0 +1,50 @@
+' Gambas class file
+
+Public efectos As String[]
+Public persistencia As ClsEfectosPersistencia
+Public pathConfiguracion As String
+Public manipulador As ClsManipulador
+
+Public Sub _new(config As String, manip As ClsManipulador)
+
+  pathConfiguracion = config
+  manipulador = manip
+  efectos = New String[]
+  persistencia = New ClsEfectosPersistencia
+  efectos = persistencia.cargar(pathConfiguracion, manipulador.getInterprete())
+
+End
+
+Public Function cargar()
+
+  efectos = persistencia.cargar()
+
+End
+
+Public Function evento(id As Integer)
+
+  If id > efectos.Count - 1
+    Message.Warning("El efecto no existe, recurra a configuración")
+  Else
+    manipulador.repEvento(efectos[id - 1])
+  Endif
+
+End
+
+Public Function setContent(eff As String[])
+
+  efectos = eff
+
+End
+
+Public Function persistir()
+
+  persistencia.persistir(pathConfiguracion, efectos, manipulador.getInterprete())
+
+End
+
+Public Function getContent() As String[]
+
+  Return (efectos)
+
+End

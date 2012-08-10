@@ -1,0 +1,48 @@
+' Gambas class file
+
+Public btnReproducir As Button
+Public btnPisador As ToggleButton
+
+Public Function setBtnReproducir(btn As Button)
+
+  btnReproducir = btn
+
+End
+
+Public Function setBtnPisador(btn As ToggleButton)
+
+  btnPisador = btn
+
+End
+
+Public Function DeshabilitarPisador()
+
+  btnPisador.Enabled = False
+
+End
+
+Public Function HabilitarPisador()
+
+  btnPisador.Enabled = True
+
+End
+
+Public Function resetPisador()
+
+  btnPisador.Enabled = True
+  btnPisador.Value = False
+  btnPisador.Text = "Pisa&dor"
+
+End
+
+Public Function BtnReproducirRep()
+
+  btnReproducir.Text = "Re&producir"
+  btnReproducir.Picture = Picture["icon:/16/play"]
+End
+
+Public Function BtnReproducirPau()
+
+  btnReproducir.Text = "&Pausar"
+
+End

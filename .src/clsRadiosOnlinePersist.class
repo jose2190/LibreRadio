@@ -1,0 +1,67 @@
+' Gambas class file
+
+Public Function cargar(path As String, interprete As ClsInterprete) As Object[]
+
+  Dim archivo As File
+  Dim cadena As String
+  Dim decod As String[]
+  Dim respuesta As Object[]
+  Dim urls As String[]
+  Dim nombres As String[]
+
+  respuesta = New Object[]
+  nombres = New String[]
+  urls = New String[]
+
+  archivo = Open path For Read
+
+  While Not Eof(archivo)
+    Line Input #archivo, cadena
+    decod = interprete.interpretar(cadena)
+    If decod.Count > 1
+      nombres.Add(decod[0])
+      urls.Add(decod[1])
+    Endif
+  Wend
+  archivo.Close()
+
+  respuesta.Add(nombres)
+  respuesta.Add(urls)
+
+  Return (respuesta)
+
+End
+
+Public Function validarArchivo(path As String) As Boolean
+
+  Dim respuesta As Boolean
+  Dim archivo As File
+
+  respuesta = True
+
+  Try archivo = Open path For Read
+
+  If Error
+    respuesta = False
+  Endif
+
+  archivo.Close()
+
+  Return (respuesta)
+
+End
+
+Public Function guardar(path As String, configs As String[])
+
+  Dim archivo As File
+  Dim i As Integer
+
+  archivo = Open path For Create
+
+  For i = 0 To configs.Count - 1
+    Write #archivo, (configs[i] & "\n")
+  Next
+
+  archivo.Close()
+
+End

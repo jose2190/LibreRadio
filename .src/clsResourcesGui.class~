@@ -1,0 +1,28 @@
+' Gambas class file
+PRIVATE organizador AS TabStrip
+PRIVATE listaArchivos AS ListBox
+PRIVATE navArchivos AS DirChooser
+
+PUBLIC FUNCTION setTab(Tbs AS TabStrip)
+  organizador = Tbs
+  organizador.Count = 2
+  organizador[0].Caption = "Nav. Archivos"
+  organizador[1].Caption = "R.Onlines / Locuciones"
+END
+
+PUBLIC FUNCTION getActual() AS Integer
+  RETURN (organizador.Index)
+END
+
+PUBLIC FUNCTION enfocar()
+  organizador.SetFocus()
+END
+
+PUBLIC FUNCTION setLista(lst AS ListBox, directorio AS DirChooser)
+  listaArchivos = lst
+  navArchivos = directorio
+END
+
+
+
+

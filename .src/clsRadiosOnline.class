@@ -1,0 +1,91 @@
+' Gambas class file
+
+Private pathLista As String
+Private manipuladorResource As ClsResources
+Private gui As ClsRadiosOnlineGui
+Private persistencia As ClsRadiosOnlinePersist
+
+Private urls As String[]
+Private nombres As String[]
+
+Public Sub _new(pathListaExt As String, listaBox As ComboBox, spbHs As SpinBox, spbMin As SpinBox)
+  gui = New ClsRadiosOnlineGui(listaBox, spbHs, spbMin)
+  pathLista = pathListaExt
+  persistencia = New ClsRadiosOnlinePersist
+End
+
+Public Function setManipuladorResource(manipuladorResourceExt As ClsResources)
+  manipuladorResource = manipuladorResourceExt
+End
+
+
+Public Function cargar()
+  Dim data As Object[]
+  data = persistencia.cargar(pathLista, manipuladorResource.getInterprete())
+  
+  nombres = data[0]
+  urls = data[1]
+  gui.cargar(nombres)
+End
+
+Public Function getRadioOnline() As Object[]
+  Dim respuesta As Object[]
+  Dim i As Integer
+  Dim tagRetorno As String[]
+  Dim urlsRetorno As String[]
+  Dim duracionRetorno As String[]
+  
+  
+  tagRetorno = New String[]
+  urlsRetorno = New String[]
+  duracionRetorno = New String[]
+  
+  respuesta = New Object[]
+  
+  i = gui.getActualRadio()
+  tagRetorno.Add(nombres[i])
+  urlsRetorno.Add(urls[i])
+
+  duracionRetorno.Add(gui.getDuracion())
+  
+  respuesta.Add(tagRetorno)
+  respuesta.Add(urlsRetorno)
+  respuesta.Add(duracionRetorno)
+  
+  Return (respuesta)
+End
+
+
+Public Function persistir()
+  Dim i As Integer
+  Dim data As String[]
+  Dim temps As String[]
+  Dim interprete As ClsInterprete
+  
+  interprete = manipuladorResource.getInterprete()
+  data = New String[]
+  temps = New String[2]
+  For i = 0 To urls.Count - 1
+    temps[0] = nombres[i]
+    temps[1] = urls[i]
+    data.Add(interprete.codificar(temps))
+  Next
+  
+  persistencia.guardar(pathLista, data)
+End
+
+Public Function getContent() As Object[]
+  Dim respuesta As Object[]
+  
+  respuesta = New Object[]
+  
+  respuesta.Add(nombres)
+  respuesta.Add(urls)
+  
+  Return (respuesta)
+End
+
+Public Function setContent(nombresExt As String[], urlsExt As String[])
+  nombres = nombresExt
+  urls = urlsExt
+End

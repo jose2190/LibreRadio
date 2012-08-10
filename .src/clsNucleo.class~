@@ -1,0 +1,205 @@
+' Gambas class file
+
+Private nucleo As Process
+Private pathnucleo As String
+Private pathSocket As String
+
+Private servidor As ServerSocket
+Private comunicador As Socket
+
+Private latencia As Timer
+
+Private posicion_hora As Integer
+Private posicion_minuto As Integer
+Private posicion_segundos As Integer
+Private comandos As String[]
+
+Private manipulador As ClsManipulador
+
+' Nota: para conectar al socket UNIX, se conecta así:
+' misocket.Connect("/path/del/socket", Net.local)
+
+Public Sub _new(path_socket As String, path_nucleo As String)
+
+  servidor = New ServerSocket As "servidor"
+
+  latencia = New Timer As "latencia"
+  latencia.Delay = 1000
+
+  pathnucleo = path_nucleo
+  servidor.Path = path_socket
+  servidor.Type = Net.Local
+  servidor.Listen()
+
+  comandos = New String[]
+
+End
+
+Public Function setManipulador(manipuladorExt As ClsManipulador)
+
+  manipulador = manipuladorExt
+
+End
+
+'::::::::::: INSTANCIACIÓN DEL NUCLEO :::::::::::::::
+
+Public Function iniciarNucleo()
+
+  nucleo = Exec ["python", getPathNucleo(), servidor.Path] For Write
+
+  While Not (comunicador <> Null)
+    Wait 1
+  Wend
+  latencia.Enabled = True
+  latencia.Start()
+
+End
+
+' :::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+' Sockets
+
+Public Sub servidor_Connection(RemoteHostIP As String)
+
+  comunicador = servidor.Accept()
+
+End
+
+Public Sub Socket_Read()
+
+  Dim sCad As String
+
+  Read #Last, sCad, Lof(Last)
+
+  manipulador.analizar(sCad)
+
+End
+
+'::: Manipulador de eventos
+
+'::: Getters
+
+Public Function getPathSocket() As String
+
+  Return (pathSocket)
+
+End
+
+Public Function getPathNucleo() As String
+
+  Return (pathnucleo)
+
+End
+
+' :::::::::::::::::::::::::::::::::::::::
+
+' ::: Interacciones con le nucleo
+Public Function reproducir(path As String, Optional limite As Float = -1, seeking As Float = -1)
+
+  enviarComando("{reproducir}#{" & path & "}#{" & limite & "}#{" & seeking & "}")
+
+End
+
+Public Function volumen(volumenL As Integer)
+
+  If volumenL < 0
+    volumenL = 0
+  Endif
+  enviarComando("{volumen}#{" & Str(volumenL) & "}")
+
+End
+
+Public Function evento(argumentos As String[])
+
+  Dim i As Integer
+  Dim procesado As String
+
+  procesado = ""
+
+  For i = 0 To (argumentos.Count - 1)
+    If ((argumentos.Count - 2) >= i)
+      procesado &= "{" & Str(argumentos[i]) & "}#"
+    Else
+      procesado &= "{" & Str(argumentos[i]) & "}"
+    Endif
+  Next
+  enviarComando(procesado)
+
+End
+
+Public Function pisar()
+
+  enviarComando("{pisar}#{-1}")
+
+End
+
+Public Function elevar()
+
+  enviarComando("{elevar}#{-1}")
+
+End
+
+Public Function detener()
+
+  enviarComando("{detener}#{-1}")
+
+End
+
+'::: Métodos de Pánico
+
+Public Function cerrarAire()
+
+  Try nucleo.Kill
+  nucleo = Null
+  comunicador.Close()
+  servidor.Close()
+  If Error
+    Print "error"
+  Endif
+
+End
+
+'::Sincronizacion
+
+Public Sub latencia_Timer()
+
+  Try
+  enviarComando("{posicion}#{1}")
+
+  If Error
+    manipulador.getError("nclSync")
+  Endif
+
+End
+
+Public Function Sincronizar()
+
+End
+
+':::Especiales
+
+Public Function enviarComando(argumento As String)
+
+  Dim estado As Boolean
+
+  Write #comunicador, (argumento)
+
+End
+
+Public Function inicializar(volumen As Integer)
+
+  enviarComando("{volumen}#{" & volumen & "}")
+
+End
+
+Public Function pausar()
+
+  enviarComando("{pausar}#{}")
+
+End
+
+Public Function despausar()
+
+  enviarComando("{despausar}#{}")
+
+End

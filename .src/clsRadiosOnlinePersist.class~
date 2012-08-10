@@ -1,0 +1,63 @@
+' Gambas class file
+
+PUBLIC FUNCTION cargar(path AS String, interprete AS clsInterprete) AS Object[]
+  DIM archivo AS File
+  DIM cadena AS String
+  DIM decod AS String[]
+  DIM respuesta AS Object[]
+  DIM urls AS String[]
+  DIM nombres AS String[]
+  
+  respuesta = NEW Object[]
+  nombres = NEW String[]
+  urls = NEW String[]
+  
+  
+  archivo = OPEN path FOR READ
+    
+    WHILE NOT Eof(archivo)
+      LINE INPUT #archivo, cadena
+        decod = interprete.interpretar(cadena)
+        IF decod.Count > 1
+          nombres.Add(decod[0])
+          urls.Add(decod[1])
+        ENDIF
+    WEND
+  archivo.Close()
+  
+  respuesta.Add(nombres)
+  respuesta.Add(urls)
+  
+  RETURN (respuesta)
+END
+
+PUBLIC FUNCTION validarArchivo(path AS String) AS Boolean
+  DIM respuesta AS Boolean
+  DIM archivo AS File
+  
+  respuesta = TRUE
+  
+  TRY archivo = OPEN path FOR READ
+  
+  IF ERROR
+    respuesta = FALSE
+  ENDIF
+  
+  archivo.Close()
+  
+  RETURN (respuesta)
+END
+
+PUBLIC FUNCTION guardar(path AS String, configs AS String[])
+  DIM archivo AS file
+  DIM i AS Integer
+  
+  archivo = OPEN path FOR WRITE
+  
+  FOR i = 0 TO configs.Count - 1
+    WRITE #archivo, (configs[i] & "\n")
+  NEXT
+  
+  archivo.Close()
+END
+

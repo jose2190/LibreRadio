@@ -1,0 +1,109 @@
+' Gambas class file
+
+Private lista As ColumnView
+
+Public Sub _new()
+
+End
+
+Public Function setLista(GLista As ColumnView)
+
+  lista = GLista
+
+  lista.Columns.Count = 4
+  lista.Columns[0].Text = "E"
+  lista.Columns[1].Text = "Duracion"
+  lista.Columns[2].text = "Nombre"
+  lista.Columns[3].Text = "Url"
+
+  lista.Columns[0].Width = 20
+
+End
+
+Public Function refrescar(nombres As String[], urls As String[], duraciones As String[], reproduciendo As Integer, estados As String[], enfoque As Integer)
+
+  Dim i As Integer
+  
+  
+
+  lista.Clear()
+
+  For i = 0 To urls.Count - 1
+    lista.Add(i, "")
+    lista[i][0] = estados[i]
+    lista[i][1] = duraciones[i]
+    lista[i][2] = nombres[i]
+    lista[i][3] = urls[i]
+  Next
+
+  If lista.Exist(reproduciendo)
+    lista[reproduciendo][0] = "R ->"
+  Endif
+
+  If enfoque > -1
+    lista[enfoque].Selected = True
+  Endif
+
+  
+End
+
+Public Function seleccionados() As Integer[]
+
+  Dim i As Integer
+  Dim Items_seleccionados As Integer[]
+
+  Items_seleccionados = New Integer[]
+
+  For i = 0 To lista.Count - 1
+    If lista[i].Selected
+      Items_seleccionados.Add(i)
+    Endif
+  Next
+
+  Return (Items_seleccionados)
+
+End
+
+Public Function enfocar(seleccion As Integer[])
+
+  Dim i As Integer
+
+  For i = 0 To seleccion.Count - 1
+   If lista.Exist(seleccion[i])
+    lista[seleccion[i]].Selected = True
+   'lista[seleccion[i]].EnsureVisible()
+   Endif
+  Next
+lista.SetFocus()
+End
+
+Public Function getSeleccionUnica() As Integer
+
+  Dim data As Integer[]
+  Dim respuesta As Integer
+
+  data = seleccionados()
+
+  If data.Count > 0
+    respuesta = data[0]
+  Else
+    respuesta = -1
+  Endif
+
+  Return (respuesta)
+
+End
+
+Public Function existe(item As Integer) As Boolean
+
+  Dim respuesta As Boolean
+
+  If lista.Exist(item)
+    respuesta = True
+  Else
+    respuesta = False
+  Endif
+
+  Return (respuesta)
+
+End

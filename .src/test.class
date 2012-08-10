@@ -1,0 +1,101 @@
+' Gambas class file
+PUBLIC manipulador AS clsManipulador
+PUBLIC nucleo AS clsNucleo
+PUBLIC lista AS clsListas
+PUBLIC resources AS clsResources
+
+PUBLIC SUB Form_Open()
+nucleo = NEW clsNucleo("/home/jose/Escritorio/socket.sok", "/home/jose/Escritorio/nucleo/core/MainCore.py")
+nucleo.iniciarNucleo()
+Timer1.Delay = 1000
+'Timer1.Start()
+END
+
+PUBLIC FUNCTION mostrar(datas AS String)
+  
+  Label1.Text = datas
+  
+END
+
+PUBLIC SUB Button1_Click()
+
+  nucleo.enviarComando(TextBox1.Text)
+
+END
+
+PUBLIC SUB Slider1_Change()
+
+  nucleo.volumen(Slider1.Value)
+
+END
+
+PUBLIC SUB Timer1_Timer()
+
+  nucleo.enviarComando("{posicion}#{1}")
+
+END
+
+PUBLIC SUB Button2_Click()
+  nucleo.elevar()
+END
+
+PUBLIC SUB Button3_Click()
+nucleo.pisar()
+END
+
+PUBLIC SUB Form_Close()
+
+  nucleo.cerrarAire()
+
+END
+
+PUBLIC SUB Button4_Click()
+  DIM hora AS String
+  DIM minutos AS String
+  DIM argumento AS String[]
+  
+  argumento = NEW String[]
+  
+  hora = "/home/jose/Escritorio/nucleo/resources/locuciones/horarias/HRS" & Format(Now(), "hh") & ".ogg"
+  minutos = "/home/jose/Escritorio/nucleo/resources/locuciones/horarias/MIN" & Format(Now(), "nn") & ".ogg"
+  argumento.Add("evento")
+  argumento.Add("reproducir")
+  argumento.Add(hora)
+  argumento.Add(minutos)
+  
+  nucleo.evento(argumento)
+  
+  
+  'Message.Info(hora)
+  'Message.Info(minutos)
+
+END
+
+PUBLIC SUB DirChooser1_Activate()
+
+  DIM File AS String
+  listbox1.Clear()
+  FOR EACH File IN Dir(DirChooser1.SelectedPath, "*.mp3").Sort()
+    listbox1.Add(File)
+  NEXT
+
+END
+
+PUBLIC SUB DirChooser1_Change()
+
+    DIM File AS String
+  listbox1.Clear()
+  FOR EACH File IN Dir(DirChooser1.SelectedPath, "*.mp3").Sort()
+    listbox1.Add(File)
+  NEXT
+
+END
+
+PUBLIC SUB Button5_Click()
+  DIM comando AS String
+  
+  comando = "{reproducir}#{" & DirChooser1.SelectedPath & "/" & listbox1.Current.Text & "}"
+
+  nucleo.enviarComando(comando)
+
+END

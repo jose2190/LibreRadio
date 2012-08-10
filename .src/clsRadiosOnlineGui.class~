@@ -1,0 +1,49 @@
+' Gambas class file
+PRIVATE listaRadios AS ComboBox
+PRIVATE spinHora AS SpinBox
+PRIVATE spinMinutos AS SpinBox
+
+PUBLIC SUB _new(listaBox AS ComboBox, spbHs AS SpinBox, spbMin AS SpinBox)
+  listaRadios = listaBox
+  spinHora = spbHs
+  spinMinutos = spbMin
+  
+  spinHora.MinValue = 0
+  spinHora.MinValue = 0
+  spinHora.MaxValue = 59
+  spinMinutos.MaxValue = 59
+END
+
+PUBLIC FUNCTION cargar(data AS String[])
+  DIM i AS Integer
+  listaRadios.Clear()
+  data.Sort(gb.Ascent)
+  
+  FOR i = 0 TO data.Count - 1
+    listaRadios.Add(data[i])
+  NEXT
+END
+
+
+PUBLIC FUNCTION getActualRadio() AS Integer
+  RETURN (listaRadios.Index)
+END
+
+PUBLIC FUNCTION getDuracion() AS String
+  DIM hs AS String
+  DIM mins AS String
+  
+  IF (spinHora.Value <= 9)
+    hs = "0" & spinHora.Value
+  ELSE
+    hs = Str(spinHora.Value)
+  ENDIF
+
+  IF (spinMinutos.Value <= 9)
+    mins = "0" & spinMinutos.Value
+  ELSE
+    mins = Str(spinMinutos.Value)
+  ENDIF
+  
+  RETURN (hs & ":" & mins)
+END

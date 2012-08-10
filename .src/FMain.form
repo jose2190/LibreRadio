@@ -1,0 +1,443 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,118,77)
+  Expand = True
+  { LibreRadio Menu
+    Text = ("&LibreRadio")
+    { MenuConfiguracion Menu
+      Text = ("&Preferencias de configuración ...")
+      Picture = Picture["icon:/32/system"]
+      Tag = "Configurar LibreRadio"
+    }
+    { ItempantallaCompleta Menu
+      Text = ("Panta&lla Completa")
+      Picture = Picture["icon:/16/fullscreen"]
+    }
+    { ItemSalir Menu
+      Text = ("&Salir")
+      Picture = Picture["icon:/64/quit"]
+      Tag = "Salir de LibreRadio"
+    }
+  }
+  { MenuLibertics Menu
+    Text = ("&Ayuda")
+    { ItemLiberticsLibreRadio Menu
+      Text = ("Acerca de LibreRadio")
+      Picture = Picture["icon:/32/question"]
+    }
+    { ItemLiberticsLibertics Menu
+      Text = ("Acerca de Libertics")
+      Picture = Picture["icon:/32/question"]
+    }
+  }
+  { HBIndicadoresSuperiores HBox
+    MoveScaled(0,0,114,17)
+    Expand = True
+    Spacing = True
+    Margin = True
+    Padding = 4
+    { FrmLogo Frame
+      MoveScaled(1,0,27.1429,15.7143)
+      Text = (" ")
+      { PictureBox1 PictureBox
+        MoveScaled(0.2857,2,26.8571,12.8571)
+        ToolTip = ("Libertics LibreRadio")
+        PopupMenu = "LibreRadio"
+        Picture = Picture["resources/logo.png"]
+        Stretch = True
+      }
+    }
+    { FrmControles Frame
+      MoveScaled(29,0,57.1429,15.7143)
+      Expand = True
+      Text = ("Controles")
+      { frmControlesAEA Frame
+        MoveScaled(0.4286,1.8571,30,13)
+        { lblControlesAEAEnAire Label
+          MoveScaled(0.5714,0.2857,28.5714,3.8571)
+          Font = Font["Bold"]
+          Background = &HB7FF9F&
+          ToolTip = ("Actualmente en reproducción")
+          Text = ("En AIRE:")
+        }
+        { lblControlesAEAPosicion Label
+          MoveScaled(0.5714,3.1429,28.5714,3.8571)
+          Font = Font["Bold"]
+          Background = &HB7FF9F&
+          ToolTip = ("Posición y duración del audio actual")
+          Text = ("Posicion:")
+        }
+        { lblControlesAEAInicio Label
+          MoveScaled(0.5714,6.1429,28.5714,3.8571)
+          Visible = False
+          Font = Font["Bold"]
+          ToolTip = ("Hora de inicio del audio actual")
+          Text = ("Inicio:")
+        }
+        { lblControlesAEAFin Label
+          MoveScaled(0.5714,9.1429,28.5714,3.8571)
+          Visible = False
+          Font = Font["Bold"]
+          ToolTip = ("Hora en la que finaliza el audio actual")
+          Text = ("Finaliza:")
+        }
+      }
+      { frmControlesSEA Frame
+        MoveScaled(32,2,24,13)
+        { lblControlesSEASiguiente Label
+          MoveScaled(1,0.1429,28.5714,3.8571)
+          Font = Font["Bold"]
+          Background = &HFFFF7E&
+          Text = ("Siguiente:")
+        }
+        { lblControlesSEADuracion Label
+          MoveScaled(1,3,28.5714,3.8571)
+          Font = Font["Bold"]
+          Background = &HFFFF7E&
+          Text = ("Duracion:")
+        }
+        { lblControlesSEAurl Label
+          MoveScaled(1.2857,6.5714,28.5714,3.8571)
+          Visible = False
+          Font = Font["Bold"]
+          Text = ("Url:")
+        }
+      }
+    }
+    { FrmLocuciones Frame
+      MoveScaled(86,0,27.1429,15.7143)
+      Text = ("Hora")
+      { btnLocHoraria Button
+        MoveScaled(1,10,25,4)
+        ToolTip = ("Reproduce una locución con la hora actual")
+        Text = ("&Horaria")
+      }
+      { tmrHoraActual #Timer
+        #MoveScaled(20,2)
+        Enabled = True
+      }
+      { lblVisorHorarias Label
+        MoveScaled(5.8571,2.7143,20,6)
+        Font = Font["Miriam Mono CLM,Bold,+7"]
+        ToolTip = ("Hora actual del sistema")
+        Text = ("00:00:00")
+      }
+    }
+  }
+  { HBControlesTrabajo HBox
+    MoveScaled(0,18,114,58)
+    Spacing = True
+    Margin = True
+    Padding = 4
+    { FrmFuentes Frame
+      MoveScaled(0,0,42.8571,42.8571)
+      Expand = True
+      Text = ("Archivos")
+      { HBFRMFuentes HBox
+        MoveScaled(0,2.1429,41,55)
+        { TbsFuentes TabStrip
+          MoveScaled(0.1429,0.1429,42,55.2857)
+          ToolTip = ("Elementos para la lista de reproducción")
+          Expand = True
+          AutoResize = True
+          Count = 3
+          Index = 0
+          Text = ("Nav. Archivos")
+          { HBTabArchivos HBox
+            MoveScaled(0,0,40,50)
+            { DVDirectorios DirChooser
+              MoveScaled(0.4286,0.1429,20,25)
+              ToolTip = ("Vista de las carpetas en su equipo y red local")
+              Expand = True
+              ShowSplitter = False
+            }
+            { LBArchivos ListBox
+              MoveScaled(21.2857,0,20,50)
+              ToolTip = ("Lista de los archivos soportados, dentro de la carpeta actual")
+              Expand = True
+              Mode = Select.Multiple
+            }
+          }
+          Index = 1
+          Text = ("R.Onlines / Locuciones")
+          { FrmRadioOnline Frame
+            MoveScaled(0,0.4286,42,19)
+            Text = ("Radios Online")
+            { CbxRadiosOnline ComboBox
+              MoveScaled(16,3,25,4)
+              ToolTip = ("Lista de las radios online")
+              ReadOnly = True
+              Sorted = True
+            }
+            { LblRadiosOnlines Label
+              MoveScaled(0.7143,3,14,4)
+              Text = ("Radios Onlines:")
+            }
+            { LblRadiosOnlinesTiempo Label
+              MoveScaled(1,8,14,4)
+              Text = ("Duración:")
+            }
+            { pnlRadiosOnlineSpbox Panel
+              MoveScaled(14,7,26,5)
+              { SpbRadiosOnlineHS SpinBox
+                MoveScaled(5,0.8571,7.1429,4)
+                ToolTip = ("Minutos que durará la reproducción de la radio online en aire")
+                MaxValue = 23
+                Value = 1
+              }
+              { SpbRadiosOnlineMIN SpinBox
+                MoveScaled(18.4286,0.8571,7.1429,4)
+                ToolTip = ("Segundos que durará la reproducción de la radio en aire")
+                MaxValue = 59
+              }
+              { LblRadiosOnlinesTiempoMin Label
+                MoveScaled(14,0.8571,4,4)
+                Text = ("Seg:")
+              }
+              { LblRadiosOnlinesTiempoHS Label
+                MoveScaled(0.4286,0.8571,4,4)
+                Text = ("Min:")
+              }
+            }
+          }
+          { FrmLocucionesALista Frame
+            MoveScaled(0,19,41.4286,21.4286)
+            Text = ("Locuciones")
+            { BtnLocucionesAListaHoraria Button
+              MoveScaled(2,3,17,4)
+              ToolTip = ("Agrega un evento \"locucion horaria\" a la lista de reproducción")
+              Text = ("Locución Horaria")
+            }
+          }
+          Index = 2
+          Text = ("Audioteca")
+          Index = 0
+        }
+      }
+    }
+    { POpc Panel
+      MoveScaled(44,0,24.2857,57.8571)
+      { FrmEfectos Frame
+        MoveScaled(0,44,24,10.7143)
+        Expand = True
+        Text = ("Efectos")
+        { btnEfecto1 Button
+          MoveScaled(0.8571,2.8571,5,3)
+          Text = ("&1")
+        }
+        { btnEfecto2 Button
+          MoveScaled(6.4286,2.8571,4.7143,3)
+          Text = ("&2")
+        }
+        { btnEfecto3 Button
+          MoveScaled(11.8571,2.8571,4.7143,3)
+          Text = ("&3")
+        }
+        { btnEfecto4 Button
+          MoveScaled(17.2857,2.8571,4.7143,3)
+          Text = ("&4")
+        }
+        { btnEfecto5 Button
+          MoveScaled(1,7,5,3)
+          Text = ("&5")
+        }
+        { btnEfecto6 Button
+          MoveScaled(6.4286,6.8571,4.7143,3)
+          Text = ("&6")
+        }
+        { btnEfecto7 Button
+          MoveScaled(11.8571,6.8571,4.7143,3)
+          Text = ("&7")
+        }
+        { btnEfecto8 Button
+          MoveScaled(17.2857,6.8571,4.7143,3)
+          Text = ("&8")
+        }
+      }
+      { FrmContListas Frame
+        MoveScaled(0,0.5714,24.2857,21.4286)
+        Expand = True
+        Text = ("Agregar / Quitar")
+        { BtnAgregar Button
+          MoveScaled(1,4,10,14)
+          ToolTip = ("Agrega elementos a la lista de reproducción")
+          Text = ("Agregar")
+        }
+        { BtnEliminar Button
+          MoveScaled(13,4,10,14)
+          ToolTip = ("Elimina los archivos seleccionados en la lista de reproducción")
+          Text = ("Eliminar")
+        }
+      }
+      { FrmInformacion Frame
+        MoveScaled(0.1429,22,24,24)
+        ToolTip = ("Información de la lista de reproducción")
+        Expand = True
+        Text = ("Información")
+        { lblInformacionDuracionListaText Label
+          MoveScaled(0.8571,2.1429,20.7143,4.2857)
+          Font = Font["Bold"]
+          Text = ("Duracion de Lista:")
+        }
+        { lblInformacionDuracionListaInfo Label
+          MoveScaled(1.4286,5,20.7143,4.2857)
+          Font = Font["+2"]
+          Text = ("--:--:--")
+        }
+        { lblInformacionDuracionSeleccionText Label
+          MoveScaled(0.8571,10,20.7143,4.2857)
+          Font = Font["Bold"]
+          Text = ("Duracion de Selección:")
+        }
+        { lblInformacionDuracionSeleccionInfo Label
+          MoveScaled(1.4286,13.5714,20.7143,4.2857)
+          Font = Font["+2"]
+          Text = ("--:--:--")
+        }
+      }
+    }
+    { FrmListas Frame
+      MoveScaled(70,0,42.8571,57.8571)
+      Expand = True
+      Text = ("Lista de Reproducción")
+      { TbsListas TabStrip
+        MoveScaled(0.5714,2,42,53)
+        Expand = True
+        AutoResize = True
+        Count = 2
+        Index = 0
+        Text = ("Lista Principal")
+        { !ClvListas ColumnView
+          MoveScaled(0.1429,0.2857,34,31)
+          #Public = True
+          Background = &HDFDFFF&
+          Tracking = True
+          NoTabFocus = True
+          ToolTip = ("Lista principal de reproducción")
+          Drop = True
+          Mode = Select.Multiple
+        }
+        { frmControlesLista Frame
+          MoveScaled(35,1,6,46)
+          { sldVolumen Slider
+            MoveScaled(2,0.4286,3,15)
+            ToolTip = ("Volumen del reproductor principal")
+            PopupMenu = "LibreRadio"
+            MaxValue = 10
+            PageStep = 1
+            Mark = True
+          }
+          { btnContolListaSubir Button
+            MoveScaled(1,26,4,5)
+            ToolTip = ("Alterna un elemento de la lista hacia arriba")
+            Picture = Picture["icon:/16/up"]
+          }
+          { btnContolListaBajar Button
+            MoveScaled(1,31,4,5)
+            ToolTip = ("Alterna un elemento de la lista hacia abajo")
+            Picture = Picture["icon:/16/down"]
+          }
+          { chkSilencio CheckBox
+            MoveScaled(2,19.8571,3,3)
+            ToolTip = ("Silencia el audio actual")
+            Text = ("&Silencio")
+          }
+          { btnContolVolumenSilencio Label
+            MoveScaled(2.5714,15.4286,3,3)
+            Font = Font["Bold,Underline"]
+            Text = ("V")
+          }
+          { btnContolVolumenSilencio2 Label
+            MoveScaled(2.8571,21.8571,3,3)
+            Font = Font["Bold,Underline"]
+            ToolTip = ("Silencia el audio actual")
+            Text = ("S")
+          }
+          { btnContolListaSubir2 Button
+            MoveScaled(1,37,4,5)
+            ToolTip = ("Cargar una lista de reproducción")
+            Picture = Picture["icon:/16/file-manager"]
+          }
+          { btnContolListaBajar2 Button
+            MoveScaled(1,42,4,5)
+            ToolTip = ("Guardar la lista de reproducción actual")
+            Picture = Picture["icon:/16/floppy"]
+          }
+        }
+        { frmControlesReproduccion Frame
+          MoveScaled(-2,40,36,9)
+          { btnControlesPisador ToggleButton
+            MoveScaled(13,0.8571,21,7)
+            ToolTip = ("Activa / desactiva el pisador del reproductor principal")
+            Expand = True
+            Text = ("Pisa&dor")
+            Picture = Picture["icon:/16/down"]
+          }
+          { cbCortina ToggleButton
+            MoveScaled(15,1,10,3)
+            Text = ("&Cortina")
+          }
+          { btnControlesReproducir Button
+            MoveScaled(1,0.8571,18,7)
+            ToolTip = ("Inicia la reproducción de la lista")
+            Expand = True
+            Text = ("Re&producir")
+            Picture = Picture["icon:/16/play"]
+          }
+        }
+        { cbListaInfinita CheckBox
+          MoveScaled(1,44,15,3)
+          Text = ("Lista In&finita")
+          Value = CheckBox.True
+        }
+        { cbFade CheckBox
+          MoveScaled(17,44,15,3)
+          Visible = False
+          Text = ("Fade")
+        }
+        Index = 1
+        Text = ("Generador de listas")
+        { ClvGenTandas ColumnView
+          MoveScaled(0,0,34,31)
+          ToolTip = ("Lista principal de reproducción")
+          Drop = True
+          Mode = Select.Multiple
+        }
+        { btnGenTandasGuardar Button
+          MoveScaled(-1,39,18,7)
+          ToolTip = ("Guardar la lista actual en un archivo")
+          Expand = True
+          Text = ("Guardar Lista")
+          Picture = Picture["icon:/22/save-as"]
+        }
+        { frmControlesListaTandas Frame
+          MoveScaled(35,0,6,46)
+          { btnContolListaTandasSubir Button
+            MoveScaled(1,11.4286,4,5)
+            ToolTip = ("Alterna un elemento de la lista hacia arriba")
+            Picture = Picture["icon:/16/up"]
+          }
+          { btnContolListaTandasBajar Button
+            MoveScaled(1,20,4,5)
+            ToolTip = ("Alterna un elemento de la lista hacia abajo")
+            Picture = Picture["icon:/16/down"]
+          }
+          { btnContolListaTandasLimpiar Button
+            MoveScaled(1,28,4,5)
+            ToolTip = ("Limpiar lista actual")
+            Picture = Picture["icon:/16/clear"]
+          }
+        }
+        { btnGenTandasCargar Button
+          MoveScaled(13,39,21,7)
+          ToolTip = ("Abre una lista guardada")
+          Expand = True
+          Text = ("Abrir Lista")
+          Picture = Picture["icon:/22/open"]
+        }
+        Index = 0
+      }
+    }
+  }
+}
