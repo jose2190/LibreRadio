@@ -1,0 +1,33 @@
+# Gambas Project File 3.0
+# Compiled with Gambas 3.2.0
+Title=Libertics LibreRadio
+Startup=FMain
+Icon=resources/logo.png
+Version=1.1.0
+Component=gb.image
+Component=gb.qt4
+Component=gb.form
+Component=gb.net
+Component=gb.qt4.ext
+Description="Sistema de autocontrol para radios."
+TabSize=2
+Translate=1
+Language=es_AR
+KeepDebugInfo=0
+ControlPublic=1
+ExecPath=/home/jose/Escritorio/LibreRadio.gambas
+SourcePath=/home/jose/Escritorio
+Maintainer=José Pezzarini
+Vendor=Libertics
+Address=jpezzarini@libertics.com.ar
+Url=http://www.libertics.com.ar
+License=General Public Licence
+Prefix=1
+PackageName=libertics-libreradio-1.1.0
+CreateEachDirectory=1
+Packager=1
+Systems=ubuntu
+Menus=debian:"Applications/Sound"
+Groups=debian:"hamradio"
+Menus=ubuntu:"Applications/Amateur Radio"
+Groups=ubuntu:"hamradio"
